@@ -1,0 +1,11 @@
+@import '../../../css/util.scss';
+@import "../../../css/color";
+
+.banner-logo {
+	@extend .center-parent;
+	width: 18%;
+	img {
+        border-right: 2px solid $lightred;
+		height: 100%;
+	}
+}

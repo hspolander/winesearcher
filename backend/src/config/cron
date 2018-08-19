@@ -1,0 +1,4 @@
+  0 4 * * * /usr/bin/wget https://www.systembolaget.se/api/assortment/products/xml -O /home/henrik/sql/systembolaget_sortiment.xml
+  1 4 * * * /usr/bin/mysql -uwineuser -pchardonnay < /home/henrik/sql/delsystsort.sql
+  2 4 * * * /usr/bin/mysql -uwineuser -pchardonnay < /home/henrik/sql/populatesystsort.sql
+  59 23 * * * rm /home/henrik/sql/systembolaget_sortiment.xml

@@ -1,0 +1,9 @@
+{
+	"database": { 
+		"host": "localhost",
+	    "user": "wineuser",
+	    "password": "**********",
+	    "database": "winereview",
+	    "multipleStatements": true
+	}
+}

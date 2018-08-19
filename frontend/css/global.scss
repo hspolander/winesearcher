@@ -1,0 +1,22 @@
+.button-div {
+	padding: 10px;
+	button {
+		padding: 3px 8px;
+		background: #54799B;
+		border-radius: 5px;
+		border: 1px solid black;
+		color: white;
+
+	}
+}
+
+.nostyle-link:hover, 
+.nostyle-link:active, 
+.nostyle-link:focus {
+    text-decoration: none;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+  	outline:none !important;
+}

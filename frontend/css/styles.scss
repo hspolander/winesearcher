@@ -1,0 +1,13 @@
+@import './css/util';
+@import './css/color';
+.loader {
+  padding: 50px;
+  border: 1px solid $yellowgreen;
+  border-radius: 20px;
+  background-color: white;
+  @extend .center;
+  span {
+  	margin: 10px -3px;
+  	display: block;
+  }
+}

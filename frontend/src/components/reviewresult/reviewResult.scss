@@ -1,0 +1,138 @@
+@import "../../../css/util";
+@import "../../../css/color";
+
+.search-result {
+	margin-top: 20px;
+	width: 100%;
+    display: inline-block;
+    
+	.single-review-result {
+		background: #FFFAF9;
+		display: block;
+		margin-bottom: 50px;
+		border: 1px yellowgreen solid;
+		border-radius: 15px;
+		padding:10px;
+	table {
+		width: 100%;
+	}
+
+	tr {
+		border-top: 4px solid white;
+		&:nth-child(1) {
+			border: 0px;
+		}
+		.add-new-button {
+            cursor: pointer;
+            color: $darkblue;
+			&:hover {
+                    color: $burgundy;
+                }
+    		.fa {
+                color: $burgundy;
+    		}
+		}
+	}
+
+	td {
+		border-right: 3px solid white;
+		padding: 5px;
+		margin: 2px 2px 2px 5px;
+		white-space:pre;
+		width:20%;
+		&:nth-child(1) {
+			margin: 2px 2px 2px 0px;
+		}
+		&:nth-last-child(1) {
+			margin: 0px 2px 2px 5px;
+			border: 0px;
+		}
+		div {
+			white-space: pre-wrap;
+			vertical-align: top;
+		}
+	}
+
+	.grape {
+		margin-right: 5%;
+	}
+	.review {
+		div {
+			display:inline-block;
+		}
+		.comment {
+			width: 70%;
+		}
+	}
+	.header {
+		
+		.reviewer {
+			width: 13%;
+			font-weight: 600;
+			margin-right: 1%;
+			margin-left: 0.4%;
+			color: #8AB13B;
+			font-style: underline;
+		}
+		.date-time {
+			font-style: italic;
+			color: #8AB13B;
+		}
+		.score {
+			font-weight: bold;
+			width: 20%;
+			float: right;
+			text-align: right;
+		}
+	}
+
+	div {
+		display: inline;
+		text-align: left;
+		&.result-header {
+			margin-right: 10px;
+			font-weight: bold;
+			color: #CFCCCC;
+		}
+	}
+	.graperows, .reviewrows {
+		width: 20%;
+	}
+	}
+}
+	.input-div.search {
+  	padding: 10px;
+  	width: 380px;
+  	display: inline-block;
+      margin-bottom: 10px;
+  	.input-label {
+  		display: block;
+  		width: 200px;
+  		color: darkgray;
+  		margin: 0px 5px 5px 0px;
+  	}
+  	select {
+  		width: 100px;
+  		background: transparent;
+  		color: black;
+  		line-height: 15px;
+  		border: 1px solid;
+  		border-color: white;
+  		border-bottom: 1px solid #54799B;
+  		border-radius: 2px;
+  		padding: 0px;
+  		margin: 10px 10px 0px 10px;
+  		height: 18px;
+  		outline:none;
+  		&:focus {
+  			outline: none;
+  			border-top-color: #EFEFFF;
+  			border-left-color: #EFEFFF;
+  			border-right-color: #EFEFFF;
+  		}
+  		&:-moz-focusring {
+		    color: transparent;
+		    text-shadow: 0 0 0 #000;
+		}
+  	}
+  }

@@ -1,0 +1,35 @@
+@import "../../../../css/color";
+
+.dropdown-navigation-menu {
+    	overflow: auto;
+    	text-align: left;
+    	opacity: 0.9;
+        position: absolute;
+        z-index: 100;
+        ul {
+            padding: 0;
+            width: 195px;
+            background: $rosewhiter;
+            border: solid 1px $darkblue;
+            box-shadow: 3px 3px 3px $rosewhiter;
+    		li {
+    			list-style: none;
+    			font-size: 15px;
+    			margin: 5px 10px;
+                cursor: default;
+                a:hover {
+                    color: $burgundy;
+                    cursor: pointer;
+                }
+                a {
+                    color: $darkblue;
+
+                }
+    			.fa {
+    				margin-right: 10px;
+                    color: $burgundy;
+    			}
+                
+    		}
+    	}
+	}

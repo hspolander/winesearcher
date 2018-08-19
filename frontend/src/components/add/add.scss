@@ -1,0 +1,152 @@
+@import "../../../css/color";
+
+.add-wine {
+  display: block;
+
+  .formtitle {
+    span {
+      margin: 0px 20px 20px 40px;
+      color: $darkblue;
+      font-size: 18px;
+    }
+  }
+  form {
+  	margin: 0px 20px 20px 40px;
+  	padding: 20px;
+  	border: 1px solid $yellowgreen;
+  	border-radius: 10px;
+  	ul {
+  		margin: 0;
+  		li {
+  			dsplay: block;
+  		}
+  	}
+    .form-error {
+      display: block;
+      color: red;
+      font-size: 8pt;
+      position: absolute;
+    }
+  }
+  
+  .grape-div {
+  	margin: 5px;
+  	border: 1px solid $yellowgreen;
+    border-radius: 10px;
+    min-height: 75px;
+  
+      .fa {
+      	margin-left: 10px;
+      	color: $yellowgreen;
+      }
+  
+      .input-div {
+      margin-top: 10px;
+  	  width: 350px;
+  	  &:first-child {
+  	    margin-top: 15px;
+        }
+      }
+  }
+  
+  .clearForm {
+    background: $lightwarningred;
+    margin-left: 100px;
+  }
+
+  .input-div {
+  	padding: 10px;
+  	width: 350px;
+  	display: inline-block;
+      margin-bottom: 10px;
+  	&.block {
+  		display: block;
+  	}
+  	.input-label {
+  		display: block;
+  		width: 200px;
+  		color: darkgray;
+
+  		margin: 0px 5px 5px 0px;
+  	}
+  	input[type=range] {
+  		width: 200px;
+  	}
+  	input[type=text], input[type=password], select {
+  		width: 200px;
+  		background: transparent;
+  		color: black;
+  		line-height: 15px;
+  		border: 1px solid;
+  		border-color: white;
+  		border-bottom: 1px solid $darkblue;
+  		border-radius: 2px;
+  		padding: 0px;
+  		height: 18px;
+  		outline:none;
+      
+  		&:focus {
+  			border-top-color: $lightestblue;
+  			border-left-color: $lightestblue;
+  			border-right-color: $lightestblue;
+  		}
+  	}
+
+  	textarea {
+  		width: 400px;
+  		height: 200px;
+  		resize: none;
+  		outline:none;
+  		&:focus {
+  			border: 1px solid $darkblue;
+  		}
+  	}
+  	i {
+  	  display: inline;
+  	}
+  
+  	&.radioDiv {
+        span {
+        	width: 100px;
+        	display: inline-block;
+        }
+        span:last-of-type  {
+        	margin-left: 105px;
+        }
+  	}
+    
+  }
+}
+
+.sysWineRows {
+
+  .single-systembolag-table {
+  margin: 0px 20px 20px 40px;
+    td {
+      padding: 10px;
+      text-align: left;
+    }
+    thead {
+      border: 1px solid $yellowgreen;
+      border-radius: 10px;
+      td {
+        font-weight: bold;
+      }
+    }
+    tbody {
+      border: 1px solid $yellowgreen;
+      border-radius: 10px;
+      td {
+        .fa {
+          color: $darkblue;
+          font-weight: bold;
+        }
+        &:nth-last-child(1) {
+          text-align: center;
+          font-size: 15px;
+          margin: 0px;
+        }
+      }
+    }
+  }
+}

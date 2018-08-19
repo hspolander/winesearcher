@@ -1,41 +1,63 @@
-var debug = process.env.NODE_ENV !== "production";
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack'); // eslint-disable-line import/no-extraneous-dependencies
+const path = require('path');
 
 module.exports = {
-  context: path.join(__dirname, "src"),
-  devtool: debug ? "inline-sourcemap" : false,
-  entry: "./index.js",
+  devtool: 'cheap-module-eval-source-map',
+  entry: [
+    'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
+    'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+    'react-hot-loader/patch',
+    'whatwg-fetch', 'babel-polyfill', './src/entry.jsx'],
+  output: { path: path.join(__dirname, '/assets/'), publicPath: '/assets/', filename: 'bundle_dev.js' },
   module: {
     rules: [
       {
-      test: /\.scss$/,
-      use: [
-        "style-loader",
-        "css-loader",
-        "sass-loader", 
-      ]
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['airbnb'],
+          },
+        },
       },
       {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['react', 'es2015', 'stage-0'],
-          plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
-        }
-      }
-    ]
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, use: 'url-loader?limit=10000&minetype=application/font-woff' },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, use: 'file-loader' },
+      { test: /\.eot$/, use: 'file-loader' },
+      { test: /\.svg$/, use: 'file-loader' },
+      { test: /\.(jpg|png)$/, use: 'url-loader?limit=25000' },
+    ],
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+        USE_FAKE_DATA: process.argv.includes('--env.fake-data'),
+      },
+    }),
+  ],
+  performance: {
+    hints: false,
+  },
+  devServer: {
+    proxy: {
+      '/api/*': {
+        changeOrigin: true,
+        secure: false,
+        target: 'http://localhost:3000',
+      },
+    },
+    historyApiFallback: true,
+    host: '0.0.0.0',
+    hot: true,
+    inline: true,
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  output: {
-    path: __dirname + "/src/",
-    filename: "client.min.js"
-  },
-  plugins: debug ? [] : [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false}),
-  ],
 };
