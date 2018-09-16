@@ -87,11 +87,11 @@ export const getSystembolagWines = (name = '%%', color = '%%', year = '%%', artn
 	return Promise.all(autocompleteQueries)
 }
 
-const getSystembolagWinesQuery = (colNamne, name, color, year, artnr, price) => query(`SELECT Namn, Namn2, color, country, year, systembolagetartnr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
+const getSystembolagWinesQuery = (colNamne, name, color, year, artnr, price) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
 	 colNamne + ` like '` + name + `' AND  ` +
 	`color like '` + color + `' AND  ` +
 	`year like '` + year + `' AND  ` +
-	`systembolagetartnr like '` + artnr + `' AND  ` +
+	`nr like '` + artnr + `' AND  ` +
 	`price like '` + price + `'; `
 	)
 	.then((cursor) => {
