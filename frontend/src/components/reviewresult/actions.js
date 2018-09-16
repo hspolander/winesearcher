@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import {
+  TOGGLE_DETAILED_REVIEW_RESULT_VIEW,
   FETCH_REVIEWS_FULFILLED,
   FETCH_REVIEWS_REJECTED,
   FETCH_REVIEWS_NO_MATCH,
@@ -52,4 +53,8 @@ export const loadOrderedCellarClickedItem = item => (dispatch, getState) => {
   } else {
     fetchClickedItem(`getWineByForeignProperty?property=${item.property}&value=${item.value}&table=${item.table}&orderedProp=${item.orderedProp}`, dispatch, getState);
   }
+};
+
+export const toggleDetailedView = id => (dispatch) => {
+  dispatch({ type: TOGGLE_DETAILED_REVIEW_RESULT_VIEW });
 };

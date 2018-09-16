@@ -1,4 +1,5 @@
 import {
+  TOGGLE_DETAILED_REVIEW_RESULT_VIEW,
   FETCH_REVIEWS_FULFILLED,
   FETCH_REVIEWS_REJECTED,
   FETCH_REVIEWS_NO_MATCH,
@@ -20,6 +21,9 @@ export default function reviewResultReducer(state = initialState, action) {
     }
     case FETCH_REVIEWS_FULFILLED: {
       return { ...state, fetching: false, fetched: true, reviews: action.payload };
+    }
+    case TOGGLE_DETAILED_REVIEW_RESULT_VIEW: {
+      return { ...state, detailedView: !state.detailedView };
     }
     default: {
       return { ...state };

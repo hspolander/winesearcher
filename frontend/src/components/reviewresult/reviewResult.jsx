@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { loadClickedItem, loadOrderedClickedItem } from './actions';
+import { loadClickedItem, loadOrderedClickedItem, toggleDetailedView } from './actions';
 import { setInitialValuesResult } from '../add/actions';
 
 import './reviewResult.scss';
@@ -71,12 +71,29 @@ class WineResult extends React.Component {
             <option value="color">Färg</option>
             <option value="country">Land</option>
             <option value="name">Namn</option>
-            <option value="producer">Producent</option>
+            <option value="price">Pris</option>
             <option value="year">År</option>
             <option value="score">Betyg</option>
           </select>
         </div>
-        { this.props.fetched && this.props.reviews.data && <SearchResult wine={this.props.reviews} loadValuesAddWine={this.loadValuesAddWine} loadValuesReview={this.loadValuesReview} />}
+        <button onClick={ () => { this.props.toggleDetailedView() }} className={this.props.detailedView ? 'activeButton' : 'notActiveButton' }>Detaljerad vy</button>
+        { this.props.fetched &&  this.props.reviews && this.props.reviews.data &&
+          <div>
+            {this.props.detailedView ?
+              <SearchResultDetailed
+                wine={this.props.reviews}
+                loadValuesAddWine={this.loadValuesAddWine}
+                loadValuesReview={this.loadValuesReview}
+              />
+              :
+              <SearchResult
+                wine={this.props.reviews}
+                loadValuesAddWine={this.loadValuesAddWine}
+                loadValuesReview={this.loadValuesReview} 
+              />
+            }
+          </div>
+        }
         { this.props.fetching &&  <Loader /> }
         { this.props.reviews && this.props.reviews.data && this.props.reviews.data.length === 0 && <Noresult /> }
       </div>
@@ -88,9 +105,88 @@ class WineResult extends React.Component {
 const SearchResult = (props) => {
   const wines = props.wine.data;
   const rows = wines.map((wine) =>
-    <Row key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
+    <Row key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} removeFromCellar={props.removeFromCellar} loadValuesReview={props.loadValuesReview} />);
   return (
-    <div className="search-result">
+    <div className="search-result-reviews">
+      { props.wine && <div className="wine-result">
+        <div className="wine-result-div">
+          <table className="single-wine-table">
+            <thead>
+              <tr className="single-wine-result">
+                <td>Namn</td>
+                <td>Land</td>
+                <td>Färg</td>
+                <td>Pris</td>
+                <td>År</td>
+                <td>Druvor</td>
+                <td>Recension</td>
+                <td>Betyg</td>
+              </tr>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table>
+        </div>
+      </div> }
+    </div>
+  );
+};
+
+
+const Row = (props) => {
+  const wine = props.wine.wine;
+  const grapes = wine.grapes;
+  const graperows = grapes.map((grape) =>
+    <div key={`grape${grape.id}`} className="grape">{grape.grape}</div>);
+  return (
+    <tr className="single-wine-result">
+      <td>
+        <div>{wine.name}</div>
+      </td>
+      <td>
+        <div>{wine.country}</div>
+      </td>
+      <td>
+        <div>{ wine.color.indexOf('bubbel') > -1 ? wine.color : wine.color + ' vin' }
+          { wine.color === 'Rött' && <i className="fa fa-glass red" aria-hidden="true"></i> }
+          { wine.color === 'Rosé' && <i className="fa fa-glass rosa" aria-hidden="true"></i> }
+          { wine.color === 'Vitt' && <i className="fa fa-glass white" aria-hidden="true"></i> }
+        </div>
+      </td>
+      <td>
+        <div> {wine.price}</div>
+      </td>
+      <td>
+        <div>{wine.year}</div>
+      </td>
+      {graperows &&
+        <td>
+          <div>{graperows}</div>
+        </td>
+      }
+      <td>
+        <div> {wine.reviews[0].comment}</div>
+      </td>
+      <td>
+        <div> {wine.reviews[0].score}</div>
+      </td>
+      <td>
+        <i className="fa fa-commenting-o" aria-hidden="true" onClick={() => props.loadValuesReview(wine)} />
+        <i className="fa fa-cart-plus" aria-hidden="true" onClick={() => props.loadValuesAddWine(wine)} />
+      </td>
+    </tr>
+  );
+};
+        //<i className="fa fa-times" aria-hidden="true" onClick={() => props.removeFromCellar(wine)} />
+
+
+const SearchResultDetailed = (props) => {
+  const wines = props.wine.data;
+  const rows = wines.map((wine) =>
+    <RowDetailed key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
+  return (
+    <div className="search-result-detailed">
       { props.wine && <div className="wine-result">
         <div className="wine-result-div">
           {rows}
@@ -100,7 +196,7 @@ const SearchResult = (props) => {
   );
 };
 
-const Row = (props) => {
+const RowDetailed = (props) => {
   const wine = props.wine.wine;
   const grapes = wine.grapes;
   const reviews = wine.reviews;
@@ -113,7 +209,7 @@ const Row = (props) => {
       <div className="comment">{review.comment}</div>
     </div>);
   return (
-    <div className="single-review-result">
+    <div className="single-review-result-detailed">
     { reviews[0] && reviews[0].added &&
       <div className="header">
         <div className="reviewer">{reviews[0].reviewer}</div>
@@ -121,7 +217,7 @@ const Row = (props) => {
         <div className="score">{reviews[0].score} av 10</div>
       </div>
     }
-      <table className="single-review-table">
+      <table className="single-review-table-detailed">
         <tbody>
           <tr>
             <td>
@@ -212,6 +308,7 @@ const mapStateToProps = state =>
     reviews: state.reviewResultReducer.reviews,
     error: state.reviewResultReducer.error,
     fetching: state.reviewResultReducer.fetching,
+    detailedView: state.reviewResultReducer.detailedView,
     fetched: state.reviewResultReducer.fetched,
   });
 
@@ -219,6 +316,7 @@ const mapDispatchToProps = {
   loadClickedItem,
   loadOrderedClickedItem,
   setInitialValuesResult,
+  toggleDetailedView,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WineResult);

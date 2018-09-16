@@ -76,9 +76,19 @@ class WineResult extends React.Component {
         <button onClick={ () => { this.props.toggleDetailedView() }} className={this.props.detailedView ? 'activeButton' : 'notActiveButton' }>Detaljerad vy</button>
         { this.props.fetched && this.props.wines && this.props.wines.data && <div>
             {this.props.detailedView ?
-              <SearchResultDetailed wine={this.props.wines} removeFromCellar={this.removeFromCellar} loadValuesAddWine={this.loadValuesAddWine} loadValuesReview={this.loadValuesReview} />
+              <SearchResultDetailed
+                wine={this.props.wines}
+                removeFromCellar={this.removeFromCellar}
+                loadValuesAddWine={this.loadValuesAddWine}
+                loadValuesReview={this.loadValuesReview}
+              />
               :
-              <SearchResult wine={this.props.wines} removeFromCellar={this.removeFromCellar} loadValuesAddWine={this.loadValuesAddWine} loadValuesReview={this.loadValuesReview} />
+              <SearchResult
+                wine={this.props.wines}
+                removeFromCellar={this.removeFromCellar}
+                loadValuesAddWine={this.loadValuesAddWine}
+                loadValuesReview={this.loadValuesReview}
+              />
             }
           </div>
         }
@@ -134,9 +144,10 @@ const Row = (props) => {
         <div>{wine.country}</div>
       </td>
       <td>
-        <div>{ wine.color.indexOf('vin') > 0 ? wine.color : wine.color + ' vin' }
+        <div>{ wine.color.indexOf('bubbel') > -1 ? wine.color : wine.color + ' vin' }
           { wine.color === 'Rött' && <i className="fa fa-glass red" aria-hidden="true"></i> }
           { wine.color === 'Vitt' && <i className="fa fa-glass white" aria-hidden="true"></i> }
+          { wine.color === 'Vitt' && <i className="fa fa-glass rosa" aria-hidden="true"></i> }
         </div>
       </td>
       <td>
