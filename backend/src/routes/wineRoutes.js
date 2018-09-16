@@ -135,6 +135,10 @@ export default (server) => {
               result.sort(function(a, b) {
                 return b.wine[query.orderedProp] - a.wine[query.orderedProp];
               });
+            } else if(query.orderedProp === 'price') {
+              result.sort(function(a, b) {
+                return parseInt(a.wine[query.orderedProp].replace(" kr", "")) - parseInt(b.wine[query.orderedProp].replace(" kr", ""));
+              });
             } else if (query.orderedProp === 'score') {
               result.sort(function(a, b) {
                 return b.wine.reviews[0][query.orderedProp] - a.wine.reviews[0][query.orderedProp];
