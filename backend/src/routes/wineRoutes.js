@@ -315,7 +315,7 @@ export default (server) => {
       }
      });
 
-    server.post("/api/getAdditionalSysInfo", async (req, res, next) => {
+    server.post("/api/getSysWineGrapesInfo", async (req, res, next) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const url = req.body.url;
