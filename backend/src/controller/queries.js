@@ -2,7 +2,7 @@ import { query } from '../util/db';
 import SQL from 'sql-template-strings';
 
 const getRowValues = (table ,prop, displayTitle, data) => {
-	arr = [];
+	let arr = [];
 		for (var i = 0; i < data.length; i++) {
 			arr[i] = {value : data[i][prop], table: table, property:prop};
 		}
