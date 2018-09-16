@@ -88,7 +88,7 @@ const getAdditionalSysInfo = (values, dispatch) => {
   axios.post('/api/getAdditionalSysInfo', { url: values.url })
   .then((response) => {
     if (response.data && response.data.data.length > 0) {
-      dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED, payload: { grapes: response.data.data, values } });
+      dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED, payload: { image: response.data.data.image, grapes: response.data.data.grapes, values } });
     } else {
       dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_NO_MATCH, payload: values });
     }

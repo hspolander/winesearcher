@@ -5,6 +5,7 @@ import _ from 'lodash';
 import cheerio from 'cheerio';
 import fetch from 'node-fetch';
 
+import { getAdditionalSysWineInfo } from '../util/util'
 import {
   getUserById,
   getWineById,
@@ -324,6 +325,9 @@ export default (server) => {
         body = await body.text();
         let page = cheerio.load(body);
         let listprops = page('#destopview ul li');
+        let image = page('.product-image .carousel-container');
+        let regex = '//.*.jpg"';
+        image = image.html().match(regex);
         for (var j = 0; j < listprops.length; j++) {
         let liItem = page(listprops[j]);
           if (liItem.find('h3').text().indexOf('Råvaror') > -1) {
@@ -360,7 +364,7 @@ export default (server) => {
         if (!allrows) {
           allrows = [];
         }
-        res.json({"error" : false, "message" : "Allt väl", "data" : allrows});
+        res.json({"error" : false, "message" : "Allt väl", "data" : { grapes: allrows, image: image }});
       } else {
         res.clearCookie("WINE_UUID");
         res.json({
@@ -550,6 +554,7 @@ export default (server) => {
       const associativeArray = {};
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
+        let urlQueries = [];
         let systembolagetWines = await getSystembolagWines(query.name, query.color, query.year, query.systembolagetartnr, query.price);
         systembolagetWines = _.union(systembolagetWines[0], systembolagetWines[1]);
         for (var i = 0; i < systembolagetWines.length; i++) {
@@ -623,9 +628,13 @@ export default (server) => {
           
           delete systembolagetWines[i].Namn;
           delete systembolagetWines[i].Namn2;
+          if (systembolagetWines[i].url) {
+            urlQueries.push(getAdditionalSysWineInfo(systembolagetWines[i].url));
+          }
           systembolagetWines[i].price = systembolagetWines[i].price.slice(0, -3) + " kr";
           systembolagetWines[i].sizeml = systembolagetWines[i].sizeml.slice(0, -3) + " ml";
         }
+          console.log(await Promise.all(urlQueries));
         res.json({"error" : false, "message" : `Success`, "data" : systembolagetWines});
       } else {
         res.clearCookie("WINE_UUID");
