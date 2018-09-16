@@ -2,6 +2,8 @@ import { query, SQL } from '../util/db';
 var bcrypt = require('bcrypt');
 const uuidv4 = require('uuid/v4');
 import _ from 'lodash';
+import cheerio from 'cheerio';
+import fetch from 'node-fetch';
 
 import {
   getUserById,
@@ -309,6 +311,63 @@ export default (server) => {
       }
      });
 
+    server.post("/api/getAdditionalSysInfo", async (req, res, next) => {
+      const cookies = req.cookies;
+      if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
+        const url = req.body.url;
+        let allrows;
+        let body = await fetch(url);
+        body = await body.text();
+        let page = cheerio.load(body);
+        let listprops = page('#destopview ul li');
+        for (var j = 0; j < listprops.length; j++) {
+        let liItem = page(listprops[j]);
+          if (liItem.find('h3').text().indexOf('Råvaror') > -1) {
+            allrows = liItem.find('p');
+            liItem.find('div').remove();
+            allrows = liItem.html().replace(/<\/button>|samt |och |, |\d% |\d\d% |\d\d\d% |<p>/g, "");
+
+            allrows = allrows.split(/\r\n|<\/button>|<button /);
+            for (var i = 0; i < allrows.length; i++) {
+              allrows[i] = allrows[i].trim();
+              if (allrows[i] && allrows[i].startsWith("class")) {
+                allrows.splice(i, 1);
+                i = i - 1;
+              }
+              if (allrows[i] && allrows[i].startsWith("<h3")) {
+                allrows.splice(i, 1);
+                i = i - 1;
+              }
+              if (allrows[i] && allrows[i].startsWith("R&#xE5;varor")) {
+                allrows.splice(i, 1);
+                i = i - 1;
+              }
+              if (allrows[i] && allrows[i].endsWith("</p>")) {
+                allrows.splice(i, 1);
+                i = i - 1;
+              }
+              if (allrows[i] !== undefined && allrows[i].length < 2) {
+                allrows.splice(i, 1);
+                i = i - 1;
+              }
+            }
+          }
+        }
+        if (!allrows) {
+          allrows = [];
+        }
+        res.json({"error" : false, "message" : "Allt väl", "data" : allrows});
+      } else {
+        res.clearCookie("WINE_UUID");
+        res.json({
+          "error" : true, 
+          "session" : "nosessionRedirect", 
+          "message" : "Session expired/invalid", 
+          "data" : null
+        });
+      }
+     });
+
     server.post("/api/insertWineToCellar", async (req, res, next) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
@@ -401,7 +460,6 @@ export default (server) => {
      });
 
     const validateSession = async (wine_uuid) => {
-      console.log(wine_uuid);
       const time = getMsTime();    
       const uuid_ttl = getUuidTtl();    
       const uuid = await getUuidByUuid(wine_uuid);
