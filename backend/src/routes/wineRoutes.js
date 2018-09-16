@@ -113,7 +113,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
-        wines = await getAllNotCellarWines();
+        let wines = await getAllNotCellarWines();
         var result = [];
         for (var i = 0; i < wines.length; i++) {
 
@@ -172,7 +172,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
-        wines = await getAllCellarWines();
+        let wines = await getAllCellarWines();
         var result = [];
         for (var i = 0; i < wines.length; i++) {
           let wine = await getWineById(wines[i].id);
