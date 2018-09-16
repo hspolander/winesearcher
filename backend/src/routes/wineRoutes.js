@@ -534,6 +534,23 @@ export default (server) => {
             default:
                 systembolagetWines[i].container = "Annan";
           }
+          let tempname = _.deburr(systembolagetWines[i].Namn).replace(/ /g, "-");
+          switch(systembolagetWines[i].color) {
+            case "Rött":
+                systembolagetWines[i].url = `https://www.systembolaget.se/dryck/roda-viner/${tempname}-${systembolagetWines[i].nr}`;
+                break;
+            case "Vitt":
+                systembolagetWines[i].url = `https://www.systembolaget.se/dryck/vita-viner/${tempname}-${systembolagetWines[i].nr}`;
+                break;
+            case "Mousserande vin":
+                systembolagetWines[i].url = `https://www.systembolaget.se/dryck/mousserande-viner/${tempname}-${systembolagetWines[i].nr}`;
+                break;
+            case "Rosé":
+                systembolagetWines[i].url = `https://www.systembolaget.se/dryck/roseviner/${tempname}-${systembolagetWines[i].nr}`;
+                break;
+            default:
+                systembolagetWines[i].url = "";
+          }
           if (systembolagetWines[i].Namn2 === null) {
             systembolagetWines[i].name = systembolagetWines[i].Namn;
           } else if (systembolagetWines[i].Namn2 === null) {
