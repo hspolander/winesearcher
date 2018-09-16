@@ -5,3 +5,4 @@ bundle_prod.js
 npm-debug.log
 assets/*.woff
 release/
+/package-lock.json
