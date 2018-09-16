@@ -372,6 +372,34 @@ export default (server) => {
       }
      });
 
+    server.post("/api/getSysWineImageInfo", async (req, res, next) => {
+      const cookies = req.cookies;
+      if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
+        const url = req.body.url;
+        let allrows;
+        let body = await fetch(url);
+        body = await body.text();
+        let page = cheerio.load(body);
+        let image = page('.product-image .carousel-container');
+        let regex = '//.*.jpg';
+        if (image.html()) {
+          image = image.html().match(regex);
+          image = image[0];
+        } else {
+          image = null;
+        }
+        res.json({"error" : false, "message" : "Allt väl", "data" : image});
+      } else {
+        res.clearCookie("WINE_UUID");
+        res.json({
+          "error" : true, 
+          "session" : "nosessionRedirect", 
+          "message" : "Session expired/invalid", 
+          "data" : null
+        });
+      }
+     });
+
     server.post("/api/insertWineToCellar", async (req, res, next) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
