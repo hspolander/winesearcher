@@ -28,21 +28,16 @@ class AddReview extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.systemWineData && this.props.systemWineData.length > 0 && this.props.systemWineData !== prevProps.systemWineData) {
+      const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
+      domNode.scrollIntoView({behavior: "smooth", block: "start"});
+    }
+  }
+
   componentWillUnmount() {
     this.props.clearSysWines();
     this.props.clearInitialValues();
-  }
-
-  rangeChange(e) {
-    this.setState({ range: e.target.value });
-  }
-
-  priceChange(e) {
-    if (e.target.value) {
-      this.setState({ price: true });
-    } else {
-      this.setState({ price: false });
-    }
   }
 
   sendAddReviewRequest(values) {
@@ -51,28 +46,19 @@ class AddReview extends React.Component {
 
   sendGetSystembolagetRequest(values) {
     this.props.loadSysWines(values);
-  }
-
-  sendLoadSystembolagetRow(values) {
-    values.comment = `\r\nAlk.: ${values.Alkoholhalt}`;
-    values.boughtFrom = 'Systembolaget';
-    this.setState({ price: true });
-    this.props.setInitialValues(values);
+    const domNode = ReactDOM.findDOMNode(document.getElementById('review-formtitle'));
+    domNode.scrollIntoView({ behavior: 'smooth' });
   }
 
   render() {
     return (
       <div className="content">
         <div className="add-wine">
-          <div className="formtitle">
+          <div className="formtitle" id="review-formtitle">
             <span>Skriv recension</span>
           </div>
           <AddReviewForm
-            range={this.state.range}
-            price={this.state.price}
-            priceChange={this.priceChange}
             onSubmit={this.sendAddReviewRequest}
-            rangeChange={this.rangeChange}
             enableReinitialize={true}
           />
           <div className="formtitle">

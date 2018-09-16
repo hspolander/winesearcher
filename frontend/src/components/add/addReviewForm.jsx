@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form';
+import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loadFieldAutocomplete, onClearFieldFocus, onFieldFocus, resetForm } from './actions';
@@ -178,14 +178,14 @@ let AddReviewForm = props => (
       onFocus={() => { props.onFieldFocus('boughtFrom'); }}
     />
     { props.initialValues && props.initialValues.systembolagetartnr && <Field type="text" label="Systembolagets art.nr" validate={numeric} name="systembolagetartnr" component={renderField} placeholder="ex. 139kr" /> }
-    <Field type="text" label="Pris" onChange={props.priceChange} normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
+    <Field type="text" label="Pris" normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
     <Field name="container" label="Förpackning" component={renderSelect} options={['', 'Helflaska', 'Glas', 'Box', 'Halvflaska', 'Liten box', 'Piccolo', 'Magnum', 'Tetra', 'Stor flaska', 'Annan']} />
     { props.initialValues && props.initialValues.sizeml && <Field type="text" label="Volym" normalize={addMl} name="sizeml" component={renderField} placeholder="" /> }
     <Field
       {...props}
       type="text"
       autoComplete="off"
-      label="Betyg: "
+      label={props.score ? `Betyg: ${props.score}` : 'Sätt betyg'}
       name="score"
       component={renderRange}
       min="0"
@@ -205,20 +205,19 @@ let AddReviewForm = props => (
   </form>
 );
 AddReviewForm.propTypes = {
+  resetForm: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  priceChange: PropTypes.func.isRequired,
-  rangeChange: PropTypes.func.isRequired,
-  range: PropTypes.string,
-  price: PropTypes.bool,
 };
-//{touched && error && <span className="form-error">{error}</span>}
+
+const selector = formValueSelector('WineReview');
 const mapStateToProps = state =>
   ({
     autocompleteData: state.addReducer.fieldData,
     focusedField: state.addReducer.focusedField,
-    values: getFormValues('WineReview')(state),
+    score: selector(state, 'score'),
     initialValues: state.addReducer.initialValue,
   });
 
@@ -238,4 +237,4 @@ AddReviewForm = connect(
   mapDispatchToProps,
   )(AddReviewForm);
 
-  export default AddReviewForm;
+export default AddReviewForm;
