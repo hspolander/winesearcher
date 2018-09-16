@@ -29,9 +29,9 @@ class AddWine extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.systemWineData && this.props.systemWineData !== prevProps.systemWineData) {
+    if (this.props.systemWineData && this.props.systemWineData.length > 0 && this.props.systemWineData !== prevProps.systemWineData) {
       const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
-      domNode.scrollIntoView();
+      domNode.scrollIntoView({behavior: "smooth", block: "start"});
     }
   }
 
@@ -82,7 +82,16 @@ class AddWine extends React.Component {
           <SearchSysForm
             onSubmit={this.sendGetSystembolagetRequest}
           />
-          {this.props.systemWineData && <SearchSysResult systemWineData={this.props.systemWineData} sendLoadSystembolagetRow={this.sendLoadSystembolagetRow} />}
+          {
+            this.props.systemWineData &&
+            <div>
+              { this.props.systemWineData.length > 0 ?
+                <SearchSysResult systemWineData={this.props.systemWineData} sendLoadSystembolagetRow={this.sendLoadSystembolagetRow} />
+                :
+                <p>Inget resultat på din sökning</p>
+              }
+            </div>
+          }
         </div>
       </div>
     );
@@ -148,6 +157,9 @@ const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
             <td>
               <div className="result-header">Lägg till recension</div>
             </td>
+            <td>
+              <div className="result-header">Länk</div>
+            </td>
           </tr>
         </thead>
           {tbody}
@@ -183,6 +195,11 @@ const Row = ({ wine, sendLoadSystembolagetRow }) => {
         <td>
            <div className="sys-wine-td">
              <i className="fa fa-plus-square-o" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
+           </div>
+        </td>
+        <td>
+           <div className="sys-wine-td">
+             <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, "_blank")} />
            </div>
         </td>
       </tr>

@@ -12,6 +12,9 @@ import {
   SYSTEMBOLAGET_FETCHING,
   SET_INITIAL_VALUES,
   CLEAR_INITIAL_VALUES,
+  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_NO_MATCH,
   FETCH_SYSTEMBOLAGET_FULFILLED,
   FETCH_SYSTEMBOLAGET_REJECTED,
   FETCH_SYSTEMBOLAGET_NO_MATCH,
@@ -81,6 +84,20 @@ const getSysWines = (values, dispatch) => {
   });
 };
 
+const getAdditionalSysInfo = (values, dispatch) => {
+  axios.post('/api/getAdditionalSysInfo', { url: values.url })
+  .then((response) => {
+    if (response.data && response.data.data.length > 0) {
+      dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED, payload: { grapes: response.data.data, values } });
+    } else {
+      dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_NO_MATCH, payload: values });
+    }
+  })
+  .catch((err) => {
+    dispatch({ type: FETCH_SYSTEMBOLAGETADDITIONAL_INFO_REJECTED, payload: values, err });
+  });
+};
+
 export const loadAddReview = values => (dispatch) => {
   dispatch({ type: ADD_REVIEW_FETCHING });
   addReview(values, dispatch);
@@ -107,6 +124,10 @@ export const resetForm = name => (dispatch) => {
 
 export const setInitialValuesResult = values => (dispatch) => {
   dispatch(setInitialValues(values));
+};
+
+export const sendLoadSystembolagetRow = values => (dispatch) => {
+  getAdditionalSysInfo(values, dispatch);
 };
 
 export const clearInitialValues = () => (dispatch) => {
