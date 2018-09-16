@@ -121,7 +121,7 @@
 .sysWineRows {
 
   .single-systembolag-table {
-  margin: 0px 20px 20px 40px;
+  margin: 0px 20px 300px 40px;
     td {
       padding: 10px;
       text-align: left;
@@ -147,6 +147,12 @@
           font-size: 15px;
           margin: 0px;
         }
+      }
+      .sysWineImage {
+        vertical-align:top;
+        position: absolute;
+        margin-left: 25px;
+        max-height: 300px;
       }
     }
   }

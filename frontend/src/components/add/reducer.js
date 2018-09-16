@@ -8,14 +8,19 @@ import {
   ADD_WINE_FULFILLED,
   ADD_WINE_REJECTED,
   SET_INITIAL_VALUES,
+  SHOW_WINE_IMAGE,
+  HIDE_WINE_IMAGE,
   CLEAR_INITIAL_VALUES,
   SYSTEMBOLAGET_FETCHING,
   FETCH_SYSTEMBOLAGET_FULFILLED,
   FETCH_SYSTEMBOLAGET_REJECTED,
   FETCH_SYSTEMBOLAGET_NO_MATCH,
-  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED,
-  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_REJECTED,
-  FETCH_SYSTEMBOLAGETADDITIONAL_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_IMAGE_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_IMAGE_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_IMAGE_INFO_NO_MATCH,
   SYSTEMBOLAGET_CLEAR_VALUES,
   FIELD_AUTOCOMPLETE_FETCHING,
   FIELD_AUTOCOMPLETE_FULFILLED,
@@ -88,20 +93,38 @@ export default function reducer(state = initialState, action) {
     case FETCH_SYSTEMBOLAGET_NO_MATCH: {
       return { ...state, fetched: true, fetching: false, systemWineData: [] };
     }
-    case FETCH_SYSTEMBOLAGETADDITIONAL_INFO_FULFILLED: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED: {
       return { ...state,
         initialValue: update(action.payload.values,
           { $merge: { comment: `\r\nAlk.: ${action.payload.values.Alkoholhalt}`, boughtFrom: 'Systembolaget', grapes: action.payload.grapes, score: 5 } }) };
     }
-    case FETCH_SYSTEMBOLAGETADDITIONAL_INFO_REJECTED: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED: {
       return { ...state,
-        initialValue: update(action.payload.values,
-          { $merge: { comment: `\r\nAlk.: ${action.payload.values.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
+        initialValue: update(action.payload,
+          { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
     }
-    case FETCH_SYSTEMBOLAGETADDITIONAL_INFO_NO_MATCH: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH: {
       return { ...state,
-        initialValue: update(action.payload.values,
-          { $merge: { comment: `\r\nAlk.: ${action.payload.values.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
+        initialValue: update(action.payload,
+          { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
+    }
+    case FETCH_SYSTEMBOLAGET_IMAGE_INFO_FULFILLED: {
+      return update(state, { systemWineData: { [action.payload.rowId]: { $merge: { image: action.payload.image } } } });
+    }
+    case FETCH_SYSTEMBOLAGET_IMAGE_INFO_NO_MATCH: {
+      return update(state, { systemWineData: { [action.payload.rowId]: { $merge: { image: action.payload.image } } } });
+    }
+    case FETCH_SYSTEMBOLAGET_IMAGE_INFO_REJECTED: {
+      return update(state, { systemWineData: { [action.payload.rowId]: { $merge: { image: null } } } });
+    }
+    case HIDE_WINE_IMAGE: {
+      return update(state, { systemWineData: { [action.payload]: { $merge: { imageVisible: false } } } });
+    }
+    case SHOW_WINE_IMAGE: {
+      return update(state, { systemWineData: { [action.payload]: { $merge: { imageVisible: true } } } });
+    }
+    case FETCH_SYSTEMBOLAGET_IMAGE_INFO_NO_MATCH: {
+      return { ...state };
     }
     case FIELD_AUTOCOMPLETE_CLEAR_FOCUS: {
       return { ...state, fetched: false, fetching: false, fieldData: null, focusedField: null };

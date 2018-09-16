@@ -6,7 +6,19 @@ import PropTypes from 'prop-types';
 
 import AddReviewForm from './addReviewForm';
 import SearchSysForm from './searchSysForm';
-import { loadAddReview, loadSysWines, setInitialValues, resetForm, clearInitialValues, clearSysWines, sendLoadSystembolagetRow } from './actions';
+import {
+  sendLoadSystembolagetImage,
+  sendLoadSystembolagetRow,
+  clearInitialValues,
+  setInitialValues,
+  showImageOfWine,
+  hideImageOfWine,
+  clearSysWines,
+  loadAddReview,
+  loadSysWines,
+  resetForm,
+  } from './actions';
+
 import { authUser } from '../login/actions';
 
 import './add.scss';
@@ -71,7 +83,13 @@ class AddReview extends React.Component {
             this.props.systemWineData &&
             <div>
               { this.props.systemWineData.length > 0 ?
-                <SearchSysResult systemWineData={this.props.systemWineData} sendLoadSystembolagetRow={this.props.sendLoadSystembolagetRow} />
+                <SearchSysResult
+                  systemWineData={this.props.systemWineData}
+                  sendLoadSystembolagetRow={this.props.sendLoadSystembolagetRow}
+                  sendLoadSystembolagetImage={this.props.sendLoadSystembolagetImage}
+                  showImageOfWine={this.props.showImageOfWine}
+                  hideImageOfWine={this.props.hideImageOfWine}
+                />
                 :
                 <p>Inget resultat på din sökning</p>
               }
@@ -90,7 +108,10 @@ AddReview.propTypes = {
   clearInitialValues: PropTypes.func.isRequired,
   setInitialValues: PropTypes.func.isRequired,
   sendLoadSystembolagetRow: PropTypes.func.isRequired,
+  sendLoadSystembolagetImage: PropTypes.func.isRequired,
   systemWineData: PropTypes.array,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state =>
@@ -103,18 +124,30 @@ const mapStateToProps = state =>
   });
 
 const mapDispatchToProps = {
+  sendLoadSystembolagetImage,
+  sendLoadSystembolagetRow,
+  clearInitialValues,
   setInitialValues,
+  showImageOfWine,
+  hideImageOfWine,
   loadAddReview,
+  clearSysWines,
   loadSysWines,
   resetForm,
-  clearInitialValues,
-  sendLoadSystembolagetRow,
-  clearSysWines,
   authUser,
 };
 
 const SearchSysResult = (props) => {
-  const tbody = props.systemWineData.map( (wine, index) => <Row key={index} wine={wine} sendLoadSystembolagetRow={props.sendLoadSystembolagetRow} />);
+  const tbody = props.systemWineData.map((wine, index) =>
+    <Row
+      key={index}
+      wine={wine}
+      rowId={index}
+      sendLoadSystembolagetRow={props.sendLoadSystembolagetRow}
+      sendLoadSystembolagetImage={props.sendLoadSystembolagetImage}
+      showImageOfWine={props.showImageOfWine}
+      hideImageOfWine={props.hideImageOfWine}
+    />);
   return (
     <div id="sysbolag-result" className="sysWineRows">
       <table className="single-systembolag-table">
@@ -122,6 +155,9 @@ const SearchSysResult = (props) => {
           <tr>
             <td>
               <div className="result-header">Namn</div>
+            </td>
+            <td>
+              <div className="result-header">Bild</div>
             </td>
             <td>
               <div className="result-header">År</div>
@@ -142,7 +178,7 @@ const SearchSysResult = (props) => {
               <div className="result-header">Pris</div>
             </td>
             <td>
-              <div className="result-header">Lägg till recension</div>
+              <div className="result-header">Recensera</div>
             </td>
             <td>
               <div className="result-header">Länk</div>
@@ -156,6 +192,9 @@ const SearchSysResult = (props) => {
 };
 SearchSysResult.propTypes = {
   sendLoadSystembolagetRow: PropTypes.func.isRequired,
+  sendLoadSystembolagetImage: PropTypes.func.isRequired,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
   systemWineData: PropTypes.array,
 };
 
@@ -164,6 +203,25 @@ const Row = props => (
     <tr>
       <td>
         <div className="sys-wine-td">{props.wine.name}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">
+          {
+            props.wine.image !== null && <i
+              className="fa fa-image fa-lg"
+              aria-hidden="true"
+              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
+              onMouseLeave={() => props.hideImageOfWine(props.rowId)}
+              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
+            />
+          }
+          {
+            props.wine.image && props.wine.imageVisible &&
+            <div>
+              <img alt="Bild på vin" className="sysWineImage" src={props.wine.image} />
+            </div>
+          }
+        </div>
       </td>
       <td>
         <div className="sys-wine-td">{props.wine.year}</div>
@@ -198,6 +256,10 @@ const Row = props => (
 );
 Row.propTypes = {
   sendLoadSystembolagetRow: PropTypes.func.isRequired,
+  sendLoadSystembolagetImage: PropTypes.func.isRequired,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
+  rowId: PropTypes.number.isRequired,
   wine: PropTypes.object.isRequired,
 };
 

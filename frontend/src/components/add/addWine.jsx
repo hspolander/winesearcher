@@ -127,7 +127,7 @@ const mapDispatchToProps = {
 };
 
 const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
-  const tbody = systemWineData.map( (wine, index) => <Row key={index} wine={wine} sendLoadSystembolagetRow={sendLoadSystembolagetRow} />);
+  const tbody = systemWineData.map((wine, index) => <Row key={index} wine={wine} sendLoadSystembolagetRow={sendLoadSystembolagetRow} />);
   return (
     <div id="sysbolag-result" className="sysWineRows">
       <table className="single-systembolag-table">
@@ -155,56 +155,54 @@ const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
               <div className="result-header">Pris</div>
             </td>
             <td>
-              <div className="result-header">Lägg till recension</div>
+              <div className="result-header">Recensera</div>
             </td>
             <td>
               <div className="result-header">Länk</div>
             </td>
           </tr>
         </thead>
-          {tbody}
+        {tbody}
       </table>
     </div>);
 };
 
-const Row = ({ wine, sendLoadSystembolagetRow }) => {
-  return (
-    <tbody>
-      <tr>
-        <td>
-           <div className="sys-wine-td">{wine.name}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.year}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.country}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.color}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.container}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.producer}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">{wine.price}</div>
-        </td>
-        <td>
-           <div className="sys-wine-td">
-             <i className="fa fa-plus-square-o" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
-           </div>
-        </td>
-        <td>
-           <div className="sys-wine-td">
-             <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, "_blank")} />
-           </div>
-        </td>
-      </tr>
-    </tbody>
-    );
-};
+const Row = ({ wine, sendLoadSystembolagetRow }) => (
+  <tbody>
+    <tr>
+      <td>
+        <div className="sys-wine-td">{wine.name}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.year}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.country}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.color}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.container}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.producer}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{wine.price}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">
+          <i className="fa fa-plus-square-o" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
+        </div>
+      </td>
+      <td>
+        <div className="sys-wine-td">
+          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, '_blank')} />
+        </div>
+      </td>
+    </tr>
+  </tbody>
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddWine);
