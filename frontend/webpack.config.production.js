@@ -35,12 +35,6 @@ module.exports = {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    // this makes webpacks -p flag redundant. Optimizes and minimizes
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: true,
-      },
-    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],
