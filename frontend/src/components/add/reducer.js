@@ -15,9 +15,12 @@ import {
   FETCH_SYSTEMBOLAGET_FULFILLED,
   FETCH_SYSTEMBOLAGET_REJECTED,
   FETCH_SYSTEMBOLAGET_NO_MATCH,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_NO_MATCH,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_FULFILLED,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_REJECTED,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_NO_MATCH,
@@ -79,7 +82,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, fetched: true, fetching: false, fieldData: null };
     }
     case SYSTEMBOLAGET_FETCHING: {
-      return { ...state, fetched: false, fetching: true };
+      return { ...state, fetched: false, fetching: true, systemWineData: null };
     }
     case SYSTEMBOLAGET_CLEAR_VALUES: {
       return { ...state, systemWineData: action.payload };
@@ -93,17 +96,32 @@ export default function reducer(state = initialState, action) {
     case FETCH_SYSTEMBOLAGET_NO_MATCH: {
       return { ...state, fetched: true, fetching: false, systemWineData: [] };
     }
-    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_FULFILLED: {
       return { ...state,
         initialValue: update(action.payload.values,
           { $merge: { comment: `\r\nAlk.: ${action.payload.values.Alkoholhalt}`, boughtFrom: 'Systembolaget', grapes: action.payload.grapes, score: 5 } }) };
     }
-    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_REJECTED: {
       return { ...state,
         initialValue: update(action.payload,
           { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
     }
-    case FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH: {
+    case FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_NO_MATCH: {
+      return { ...state,
+        initialValue: update(action.payload,
+          { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
+    }
+    case FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_FULFILLED: {
+      return { ...state,
+        initialValue: update(action.payload.values,
+          { $merge: { comment: `\r\nAlk.: ${action.payload.values.Alkoholhalt}`, boughtFrom: 'Systembolaget', grapes: action.payload.grapes, score: 5 } }) };
+    }
+    case FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_REJECTED: {
+      return { ...state,
+        initialValue: update(action.payload,
+          { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };
+    }
+    case FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_NO_MATCH: {
       return { ...state,
         initialValue: update(action.payload,
           { $merge: { comment: `\r\nAlk.: ${action.payload.Alkoholhalt}`, boughtFrom: 'Systembolaget', score: 5 } }) };

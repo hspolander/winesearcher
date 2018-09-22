@@ -140,7 +140,12 @@
         .fa {
           color: $darkblue;
           font-weight: bold;
-          cursor:pointer;
+          cursor: pointer;
+          &.disabled {
+            color: $darkgray;
+            font-weight: bold;
+            cursor: default;
+          }
         }
         &:nth-last-child(1) {
           text-align: center;

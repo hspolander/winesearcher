@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import AddReviewForm from './addReviewForm';
 import SearchSysForm from './searchSysForm';
 import {
+  sendLoadSystembolagetReviewRow,
   sendLoadSystembolagetImage,
-  sendLoadSystembolagetRow,
   clearInitialValues,
   setInitialValues,
   showImageOfWine,
@@ -41,13 +41,16 @@ class AddReview extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.systemWineData && this.props.systemWineData.length > 0 && this.props.systemWineData !== prevProps.systemWineData) {
-      const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
-      domNode.scrollIntoView({behavior: "smooth", block: "start"});
+    if (this.props.systemWineData) {
+      if (!prevProps.systemWineData || this.props.systemWineData.length !== prevProps.systemWineData.length) {
+        const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
+        domNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }
 
   componentWillUnmount() {
+    this.props.authUser();
     this.props.clearSysWines();
     this.props.clearInitialValues();
   }
@@ -58,8 +61,6 @@ class AddReview extends React.Component {
 
   sendGetSystembolagetRequest(values) {
     this.props.loadSysWines(values);
-    const domNode = ReactDOM.findDOMNode(document.getElementById('review-formtitle'));
-    domNode.scrollIntoView({ behavior: 'smooth' });
   }
 
   render() {
@@ -85,7 +86,7 @@ class AddReview extends React.Component {
               { this.props.systemWineData.length > 0 ?
                 <SearchSysResult
                   systemWineData={this.props.systemWineData}
-                  sendLoadSystembolagetRow={this.props.sendLoadSystembolagetRow}
+                  sendLoadSystembolagetRow={this.props.sendLoadSystembolagetReviewRow}
                   sendLoadSystembolagetImage={this.props.sendLoadSystembolagetImage}
                   showImageOfWine={this.props.showImageOfWine}
                   hideImageOfWine={this.props.hideImageOfWine}
@@ -124,8 +125,8 @@ const mapStateToProps = state =>
   });
 
 const mapDispatchToProps = {
+  sendLoadSystembolagetReviewRow,
   sendLoadSystembolagetImage,
-  sendLoadSystembolagetRow,
   clearInitialValues,
   setInitialValues,
   showImageOfWine,
@@ -207,12 +208,15 @@ const Row = props => (
       <td>
         <div className="sys-wine-td">
           {
-            props.wine.image !== null && <i
+            props.wine.image !== null ? <i
               className="fa fa-image fa-lg"
               aria-hidden="true"
               onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
               onMouseLeave={() => props.hideImageOfWine(props.rowId)}
-              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
+            /> :
+            <i
+              className="fa fa-image fa-lg disabled"
+              aria-hidden="true"
             />
           }
           {

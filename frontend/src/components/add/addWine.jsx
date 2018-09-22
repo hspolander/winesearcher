@@ -6,7 +6,17 @@ import PropTypes from 'prop-types';
 
 import AddWineForm from './addWineForm';
 import SearchSysForm from './searchSysForm';
-import { loadAddWine, loadSysWines, setInitialValues, clearInitialValues, clearSysWines } from './actions';
+import {
+  sendLoadSystembolagetAddRow,
+  sendLoadSystembolagetImage,
+  clearInitialValues,
+  setInitialValues,
+  showImageOfWine,
+  hideImageOfWine,
+  clearSysWines,
+  loadSysWines,
+  loadAddWine,
+} from './actions';
 import { authUser } from '../login/actions';
 
 import './add.scss';
@@ -15,13 +25,7 @@ class AddWine extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      price: false,
-    };
-    this.priceChange = this.priceChange.bind(this);
-    this.sendAddWineRequest = this.sendAddWineRequest.bind(this);
     this.sendGetSystembolagetRequest = this.sendGetSystembolagetRequest.bind(this);
-    this.sendLoadSystembolagetRow = this.sendLoadSystembolagetRow.bind(this);
   }
 
   componentWillMount() {
@@ -29,9 +33,11 @@ class AddWine extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.systemWineData && this.props.systemWineData.length > 0 && this.props.systemWineData !== prevProps.systemWineData) {
-      const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
-      domNode.scrollIntoView({behavior: "smooth", block: "start"});
+    if (this.props.systemWineData) {
+      if (!prevProps.systemWineData || this.props.systemWineData.length !== prevProps.systemWineData.length) {
+        const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
+        domNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }
 
@@ -57,12 +63,6 @@ class AddWine extends React.Component {
     this.props.loadSysWines(values);
   }
 
-  sendLoadSystembolagetRow(values) {
-    values.boughtFrom = 'Systembolaget';
-    this.setState({ price: true });
-    this.props.setInitialValues(values);
-  }
-
   render() {
     return (
       <div className="content">
@@ -71,8 +71,6 @@ class AddWine extends React.Component {
             <span>Lägg till vin</span>
           </div>
           <AddWineForm
-            price={this.state.price}
-            priceChange={this.priceChange}
             onSubmit={this.sendAddWineRequest}
             enableReinitialize={true}
           />
@@ -86,7 +84,13 @@ class AddWine extends React.Component {
             this.props.systemWineData &&
             <div>
               { this.props.systemWineData.length > 0 ?
-                <SearchSysResult systemWineData={this.props.systemWineData} sendLoadSystembolagetRow={this.sendLoadSystembolagetRow} />
+                <SearchSysResult
+                  systemWineData={this.props.systemWineData}
+                  sendLoadSystembolagetRow={this.props.sendLoadSystembolagetAddRow}
+                  sendLoadSystembolagetImage={this.props.sendLoadSystembolagetImage}
+                  showImageOfWine={this.props.showImageOfWine}
+                  hideImageOfWine={this.props.hideImageOfWine}
+                />
                 :
                 <p>Inget resultat på din sökning</p>
               }
@@ -100,8 +104,10 @@ class AddWine extends React.Component {
 AddWine.propTypes = {
   loadAddWine: PropTypes.func.isRequired,
   setInitialValues: PropTypes.func.isRequired,
-  enableReinitialize: PropTypes.bool,
+  sendLoadSystembolagetImage: PropTypes.func.isRequired,
   systemWineData: PropTypes.array,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
   authUser: PropTypes.func.isRequired,
   clearSysWines: PropTypes.func.isRequired,
   clearInitialValues: PropTypes.func.isRequired,
@@ -118,16 +124,29 @@ const mapStateToProps = state =>
   });
 
 const mapDispatchToProps = {
+  sendLoadSystembolagetAddRow,
+  sendLoadSystembolagetImage,
+  clearInitialValues,
   setInitialValues,
+  showImageOfWine,
+  hideImageOfWine,
+  clearSysWines,
   loadSysWines,
   loadAddWine,
-  clearInitialValues,
-  clearSysWines,
   authUser,
 };
 
-const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
-  const tbody = systemWineData.map((wine, index) => <Row key={index} wine={wine} sendLoadSystembolagetRow={sendLoadSystembolagetRow} />);
+const SearchSysResult = (props) => {
+  const tbody = props.systemWineData.map((wine, index) =>
+    <Row
+      key={index}
+      wine={wine}
+      rowId={index}
+      sendLoadSystembolagetRow={props.sendLoadSystembolagetRow}
+      sendLoadSystembolagetImage={props.sendLoadSystembolagetImage}
+      showImageOfWine={props.showImageOfWine}
+      hideImageOfWine={props.hideImageOfWine}
+    />);
   return (
     <div id="sysbolag-result" className="sysWineRows">
       <table className="single-systembolag-table">
@@ -135,6 +154,9 @@ const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
           <tr>
             <td>
               <div className="result-header">Namn</div>
+            </td>
+            <td>
+              <div className="result-header">Bild</div>
             </td>
             <td>
               <div className="result-header">År</div>
@@ -162,47 +184,84 @@ const SearchSysResult = ({ systemWineData, sendLoadSystembolagetRow }) => {
             </td>
           </tr>
         </thead>
-        {tbody}
+        { tbody }
       </table>
-    </div>);
+    </div>
+  );
+};
+SearchSysResult.propTypes = {
+  sendLoadSystembolagetRow: PropTypes.func.isRequired,
+  sendLoadSystembolagetImage: PropTypes.func.isRequired,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
+  systemWineData: PropTypes.array,
 };
 
-const Row = ({ wine, sendLoadSystembolagetRow }) => (
+const Row = props => (
   <tbody>
     <tr>
       <td>
-        <div className="sys-wine-td">{wine.name}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.year}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.country}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.color}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.container}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.producer}</div>
-      </td>
-      <td>
-        <div className="sys-wine-td">{wine.price}</div>
+        <div className="sys-wine-td">{props.wine.name}</div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-plus-square-o" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
+          {
+            props.wine.image !== null ? <i
+              className="fa fa-image fa-lg"
+              aria-hidden="true"
+              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
+              onMouseLeave={() => props.hideImageOfWine(props.rowId)}
+            /> :
+            <i
+              className="fa fa-image fa-lg disabled"
+              aria-hidden="true"
+            />
+          }
+          {
+            props.wine.image && props.wine.imageVisible &&
+            <div>
+              <img alt="Bild på vin" className="sysWineImage" src={props.wine.image} />
+            </div>
+          }
+        </div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.year}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.country}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.color}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.container}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.producer}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">{props.wine.price}</div>
+      </td>
+      <td>
+        <div className="sys-wine-td">
+          <i className="fa fa-plus-square-o" aria-hidden="true" onClick={() => props.sendLoadSystembolagetRow(props.wine)} />
         </div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, '_blank')} />
+          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(props.wine.url, '_blank')} />
         </div>
       </td>
     </tr>
   </tbody>
 );
+Row.propTypes = {
+  sendLoadSystembolagetRow: PropTypes.func.isRequired,
+  showImageOfWine: PropTypes.func.isRequired,
+  hideImageOfWine: PropTypes.func.isRequired,
+  rowId: PropTypes.number.isRequired,
+  wine: PropTypes.object.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddWine);

@@ -161,7 +161,7 @@ let AddWineForm = props => (
       onFocus={() => { props.onFieldFocus('boughtFrom'); }}
     />
     { props.initialValues && props.initialValues.systembolagetartnr && <Field type="text" label="Systembolagets art.nr" validate={numeric} name="systembolagetartnr" component={renderField} placeholder="ex. 123456" /> }
-    <Field type="text" label="Pris" onChange={props.priceChange} normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
+    <Field type="text" label="Pris" normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
     <Field name="container" label="Förpackning" component={renderSelect} options={['', 'Helflaska', 'Glas', 'Box', 'Halvflaska', 'Liten box', 'Piccolo', 'Magnum', 'Tetra', 'Stor flaska', 'Annan']} />
     { props.initialValues && props.initialValues.sizeml && <Field type="text" label="Volym" normalize={addMl} name="sizeml" component={renderField} placeholder="" /> }
     <FieldArray name="grapes" component={renderGrapes} props={props} />
@@ -174,7 +174,6 @@ let AddWineForm = props => (
 AddWineForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  priceChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state =>

@@ -14,9 +14,12 @@ import {
   SHOW_WINE_IMAGE,
   HIDE_WINE_IMAGE,
   CLEAR_INITIAL_VALUES,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED,
-  FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_NO_MATCH,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_FULFILLED,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_REJECTED,
+  FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_NO_MATCH,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_FULFILLED,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_REJECTED,
   FETCH_SYSTEMBOLAGET_IMAGE_INFO_NO_MATCH,
@@ -89,17 +92,31 @@ const getSysWines = (values, dispatch) => {
   });
 };
 
-const getSysWineGrapesInfo = (values, dispatch) => {
+const getSysWineGrapesReviewInfo = (values, dispatch) => {
   axios.post('/api/getSysWineGrapesInfo', { url: values.url })
   .then((response) => {
     if (response.data && response.data.data.length > 0) {
-      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_INFO_FULFILLED, payload: { grapes: response.data.data, values } });
+      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_FULFILLED, payload: { grapes: response.data.data, values } });
     } else {
-      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_INFO_NO_MATCH, payload: values });
+      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_NO_MATCH, payload: values });
     }
   })
   .catch((err) => {
-    dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_INFO_REJECTED, payload: values, err });
+    dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_REVIEW_INFO_REJECTED, payload: values, err });
+  });
+};
+
+const getSysWineGrapesAddInfo = (values, dispatch) => {
+  axios.post('/api/getSysWineGrapesInfo', { url: values.url })
+  .then((response) => {
+    if (response.data && response.data.data.length > 0) {
+      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_FULFILLED, payload: { grapes: response.data.data, values } });
+    } else {
+      dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_NO_MATCH, payload: values });
+    }
+  })
+  .catch((err) => {
+    dispatch({ type: FETCH_SYSTEMBOLAGET_GRAPES_ADD_INFO_REJECTED, payload: values, err });
   });
 };
 
@@ -145,8 +162,12 @@ export const setInitialValuesResult = values => (dispatch) => {
   dispatch(setInitialValues(values));
 };
 
-export const sendLoadSystembolagetRow = values => (dispatch) => {
-  getSysWineGrapesInfo(values, dispatch);
+export const sendLoadSystembolagetAddRow = values => (dispatch) => {
+  getSysWineGrapesAddInfo(values, dispatch);
+};
+
+export const sendLoadSystembolagetReviewRow = values => (dispatch) => {
+  getSysWineGrapesReviewInfo(values, dispatch);
 };
 
 export const sendLoadSystembolagetImage = (values, rowId) => (dispatch) => {
