@@ -166,10 +166,10 @@ const Row = (props) => {
         </td>
       }
       <td>
-        <div> {wine.reviews[0].comment}</div>
+        <div> {wine.reviews[0] && wine.reviews[0].comment}</div>
       </td>
       <td>
-        <div> {wine.reviews[0].score}</div>
+        <div> {wine.reviews[0] && wine.reviews[0].score}</div>
       </td>
       <td>
         <i className="fa fa-commenting-o" aria-hidden="true" onClick={() => props.loadValuesReview(wine)} />
@@ -178,7 +178,6 @@ const Row = (props) => {
     </tr>
   );
 };
-        //<i className="fa fa-times" aria-hidden="true" onClick={() => props.removeFromCellar(wine)} />
 
 
 const SearchResultDetailed = (props) => {
