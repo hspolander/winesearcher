@@ -64,7 +64,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
-        wines = await getWineByForeignProperty(query.table, query.property, query.value);
+        let wines = await getWineByForeignProperty(query.table, query.property, query.value);
         var result = [];
         for (var i = 0; i < wines.length; i++) {
           let wine = await getWineById(wines[i].id);
@@ -227,7 +227,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
-        wines = await getWineByProperty(query.property, query.value);
+        let wines = await getWineByProperty(query.property, query.value);
         var result = [];
         for (var i = 0; i < wines.length; i++) {
           let wine = await getWineById(wines[i].id);
