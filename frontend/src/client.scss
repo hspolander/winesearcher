@@ -1,8 +1,21 @@
+$break-large: 1024px;
+@mixin respond-to($media) {
+  @if $media == small-screens {
+    @media only screen and (max-width: $break-large) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
+
 .content {
 	margin: 5px 8%;
+	@include respond-to(small-screens) { margin: 5px 0%;}
 }
 .main-content {
 	position: absolute;
+	@include respond-to(small-screens) { top: 105px;}
     top: 95px;
     left: 0px;
     right: 0px;

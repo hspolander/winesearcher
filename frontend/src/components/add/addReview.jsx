@@ -22,6 +22,7 @@ import {
   } from './actions';
 
 import { authUser } from '../login/actions';
+import setScreenSize from '../global/actions';
 
 import './add.scss';
 
@@ -33,12 +34,17 @@ class AddReview extends React.Component {
     this.sendGetSystembolagetRequest = this.sendGetSystembolagetRequest.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.authUser();
     if (this.props.navigatedInitialValues) {
       this.props.setInitialValues(navigatedInitialValues);
     } else {
       resetForm('WineReview');
+    }
+    if (window.innerWidth <= 1024) {
+      this.props.setScreenSize(true);
+    } else {
+      this.props.setScreenSize(false);
     }
   }
 
@@ -46,6 +52,12 @@ class AddReview extends React.Component {
     if (this.props.systemWineData) {
       if (!prevProps.systemWineData || this.props.systemWineData.length !== prevProps.systemWineData.length) {
         const domNode = ReactDOM.findDOMNode(document.getElementById('sysbolag-result'));
+        domNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    if (this.props.formValues) {
+      if (!prevProps.formValues || prevProps.formValues.name !== prevProps.systemWineData.name) {
+        const domNode = ReactDOM.findDOMNode(document.getElementById('review-formtitle'));
         domNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
@@ -74,7 +86,7 @@ class AddReview extends React.Component {
           </div>
           <AddReviewForm
             onSubmit={this.sendAddReviewRequest}
-            enableReinitialize={true}
+            enableReinitialize
           />
           <div className="formtitle">
             <span>Sök i systembolagets sortiment</span>
@@ -92,6 +104,7 @@ class AddReview extends React.Component {
                   showImageOfWine={this.props.showImageOfWine}
                   hideImageOfWine={this.props.hideImageOfWine}
                   systemWineData={this.props.systemWineData}
+                  isSmallScreen={this.props.isSmallScreen}
                 />
                 :
                 <p>Inget resultat på din sökning</p>
@@ -113,6 +126,7 @@ AddReview.propTypes = {
   sendLoadSystembolagetReviewRow: PropTypes.func.isRequired,
   sendLoadSystembolagetImage: PropTypes.func.isRequired,
   systemWineData: PropTypes.array,
+  setScreenSize: PropTypes.func.isRequired,
   showImageOfWine: PropTypes.func.isRequired,
   hideImageOfWine: PropTypes.func.isRequired,
 };
@@ -123,7 +137,9 @@ const mapStateToProps = state =>
     error: state.addReducer.error,
     fetching: state.addReducer.fetching,
     fetched: state.addReducer.fetched,
+    formValues: state.addReducer.initialValue,
     systemWineData: state.addReducer.systemWineData,
+    isSmallScreen: state.globalReducer.isSmallScreen,
   });
 
 const mapDispatchToProps = {
@@ -135,10 +151,10 @@ const mapDispatchToProps = {
   hideImageOfWine,
   loadAddReview,
   clearSysWines,
+  setScreenSize,
   loadSysWines,
   resetForm,
   authUser,
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddReview);

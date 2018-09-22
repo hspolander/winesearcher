@@ -10,7 +10,7 @@ export const authMiddleware = store => next => (action) => {
       }
     }
     next(action);
-  } catch(e) {
+  } catch (e) {
     console.log('error occured.', e);
   }
 };

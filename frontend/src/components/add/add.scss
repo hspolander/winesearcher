@@ -1,5 +1,15 @@
 @import "../../../css/color";
 
+$break-large: 1024px;
+@mixin respond-to($media) {
+  @if $media == small-screens {
+    @media only screen and (max-width: $break-large) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
 .add-wine {
   display: block;
 
@@ -8,6 +18,10 @@
       margin: 0px 20px 20px 40px;
       color: $darkblue;
       font-size: 18px;
+      @include respond-to(small-screens) { 
+        font-size: 40px;
+        margin: 0px 10px 10px 20px;
+      }
     }
   }
   form {
@@ -15,6 +29,9 @@
   	padding: 20px;
   	border: 1px solid $yellowgreen;
   	border-radius: 10px;
+    @include respond-to(small-screens) { 
+      margin: 0px 10px 10px 20px;
+    }
   	ul {
   		margin: 0;
   		li {
@@ -26,6 +43,9 @@
       color: red;
       font-size: 8pt;
       position: absolute;
+      @include respond-to(small-screens) { 
+        font-size: 20px;
+      }
     }
   }
   
@@ -58,7 +78,10 @@
   	padding: 10px;
   	width: 350px;
   	display: inline-block;
-      margin-bottom: 10px;
+    margin-bottom: 10px;
+    @include respond-to(small-screens) { 
+      width: 40vw;
+    }
   	&.block {
   		display: block;
   	}
@@ -66,24 +89,32 @@
   		display: block;
   		width: 200px;
   		color: darkgray;
-
   		margin: 0px 5px 5px 0px;
+      @include respond-to(small-screens) { 
+        width: 40vw;
+        font-size: 20pt;
+      }
   	}
   	input[type=range] {
-  		width: 200px;
+  		width: 70vw;
   	}
   	input[type=text], input[type=password], select {
-  		width: 200px;
-  		background: transparent;
-  		color: black;
-  		line-height: 15px;
-  		border: 1px solid;
-  		border-color: white;
-  		border-bottom: 1px solid $darkblue;
-  		border-radius: 2px;
-  		padding: 0px;
-  		height: 18px;
-  		outline:none;
+      width: 200px;
+      background: transparent;
+      color: black;
+      line-height: 15px;
+      border: 1px solid;
+      border-color: white;
+      border-bottom: 1px solid $darkblue;
+      border-radius: 2px;
+      padding: 0px;
+      height: 18px;
+      outline:none;
+      @include respond-to(small-screens) { 
+        width: 35vw;
+        height: 3vh;
+        font-size: 28pt;
+      }
       
   		&:focus {
   			border-top-color: $lightestblue;
@@ -97,6 +128,10 @@
   		height: 200px;
   		resize: none;
   		outline:none;
+      @include respond-to(small-screens) { 
+        width: 80vw;
+        font-size: 25pt;
+      }
   		&:focus {
   			border: 1px solid $darkblue;
   		}
@@ -119,16 +154,18 @@
 }
 
 .sysWineRows {
-
   .single-systembolag-table {
-  margin: 0px 20px 300px 40px;
+    margin: 0px 20px 300px 40px;
+    @include respond-to(small-screens) { 
+      margin: 20px
+    }
     td {
       padding: 10px;
       text-align: left;
     }
     thead {
       border: 1px solid $yellowgreen;
-      border-radius: 10px;
+      border-radius: 20px;
       td {
         font-weight: bold;
       }
@@ -136,7 +173,21 @@
     tbody {
       border: 1px solid $yellowgreen;
       border-radius: 10px;
+      @include respond-to(small-screens) { 
+        margin: 20px
+      }
       td {
+        @include respond-to(small-screens) {
+          font-size: 25px; 
+          .title {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #CFCCCC;
+          }
+          .fa {
+              font-size: 60px;
+          }
+        }
         .fa {
           color: $darkblue;
           font-weight: bold;
@@ -151,6 +202,17 @@
           text-align: center;
           font-size: 15px;
           margin: 0px;
+          @include respond-to(small-screens) {
+            font-size: 25px;
+            .fa {
+              font-size: 60px;
+            }
+            .title {
+              margin-right: 10px;
+              font-weight: bold;
+              color: #CFCCCC;
+            }
+          }
         }
       }
       .sysWineImage {

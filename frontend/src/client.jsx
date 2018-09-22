@@ -16,7 +16,7 @@ import PrivateRoute from './components/global/privateRoute';
 
 import './client.scss';
 
-const Client = props => (
+const Client = () => (
   <BrowserRouter>
     <div>
       <Banner />
