@@ -1,0 +1,24 @@
+@import "../../../css/util";
+@import "../../../css/color";
+
+.banner-logout {
+    width: 3%;
+    .icons-menu {
+        @extend .center-vertically;
+        color: $darkgray;
+        text-align: center;
+        i {
+            display: block;
+            &.fa {
+                display: block;
+                color: $darkgray;
+
+            }
+            &.icon-title {
+                display: block;
+                font-weight: normal;
+                font-size: 10px;
+            }
+        }
+    }
+}

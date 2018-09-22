@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
@@ -24,8 +25,14 @@ class Search extends React.Component {
   render() {
     return (
       <div className="banner-search center-parent">
-        <input type="text" onChange={this.handleChange} className={this.props.match ? 'match' : 'noMatch'} />
+        <input type="text" placeholder="Sök" onChange={this.handleChange} className={this.props.match ? 'match' : 'noMatch'} />
         {this.props.fetched && <AutocompleteSelect autocompleteSelect={this.props.data} />}
+        <div className="menu-items">
+          <MenuIcon icon="fa-search" text="Recensioner" navTo="/reviews" />
+          <MenuIcon icon="fa-flask" text="Vinförråd" navTo="/wines" />
+          <MenuIcon icon="fa-commenting-o" text="Recensera" navTo="/addReview" />
+          <MenuIcon icon="fa-cart-plus" text="Lägg till i vinförråd" navTo="/addWine" />
+        </div>
       </div>
     );
   }
@@ -43,5 +50,14 @@ const mapStateToProps = state =>
 const mapDispatchToProps = {
   loadAutocompleteSearch,
 };
+
+const MenuIcon = props => (
+  <Link className="nostyle-link" to={props.navTo}>
+    <div className="menu-item">
+      <i className={`fa ${props.icon} fa-3x`} />
+      <i className="icon-title">{props.text}</i>
+    </div>
+  </Link>
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

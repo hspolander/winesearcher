@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Menu from './user/menu';
+import Logout from './logout';
 import Logo from './logo';
 import Search from './search/search';
 
@@ -11,7 +11,7 @@ const Banner = (props) => (
   <div className="banner-main">
     <Logo />
     { props.isAuthenticated && <Search /> }
-    { props.isAuthenticated && <Menu /> }
+    { props.isAuthenticated && <Logout /> }
   </div>
 );
 

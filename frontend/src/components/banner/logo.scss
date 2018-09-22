@@ -1,9 +1,20 @@
 @import '../../../css/util.scss';
 @import "../../../css/color";
 
+$break-large: 1024px;
+@mixin respond-to($media) {
+  @if $media == small-screens {
+    @media only screen and (max-width: $break-large) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
 .banner-logo {
 	@extend .center-parent;
-	width: 18%;
+	@include respond-to(small-screens) { display: none ;}
+	width: 8%;
 	img {
         border-right: 2px solid $lightred;
 		height: 100%;
