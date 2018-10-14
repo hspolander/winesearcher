@@ -102,6 +102,28 @@ const getSystembolagWinesQuery = (colNamne, name, color, year, artnr, price) => 
 		}
 });
 
+export const getSystembolagWineByArtnr = (systembolagetartnr) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
+	` systembolagetartnr like ` + systembolagetartnr + `; `
+	)
+	.then((cursor) => {
+		if (cursor[0][0]) {
+			return cursor[0][0];
+		} else {
+			return null;
+		}
+});
+
+export const getSystembolagWineBynr = (nr) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
+	` nr like ` + nr + `; `
+	)
+	.then((cursor) => {
+		if (cursor[0][0]) {
+			return cursor[0][0];
+		} else {
+			return null;
+		}
+});
+
 export const getDistinctFromWine = (property, value) => query(`SELECT distinct wine.${property} FROM wine WHERE wine.${property} like '` + value + `'`)
 	.then((cursor) => {
 		if (cursor[0][0]) {
@@ -236,6 +258,10 @@ export const insertWine = (year = null, name = null, boughtfrom = null, price = 
 	.then((cursor) => {
 		return(cursor[0].insertId);
 });
+
+export const updateWine = (url, id) => {
+	query(`UPDATE wine SET url = ? WHERE id = ?`, [url, id])
+};
 
 export const insertReview = (id, reviewer, comment, score) => 
 	query(`INSERT INTO reviews (fk_wine_id, reviewer, comment, score) VALUES(?, ?, ?, ?)`, [id, reviewer, comment, score]);
