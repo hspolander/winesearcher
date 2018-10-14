@@ -22,18 +22,15 @@ import {
   getDistinctFromGrapes,
   getSystembolagWines,
   getAutocompleteResponse,
-  getSystembolagWineBynr,
   insertReview,
   insertWine,
   insertGrape,
   insertUser,
   insertUuid,
   updateUuid,
-  updateWine,
   updateUuidTtl,
   setUuidExpired,
   setWineNotInCellar,
-  getSystembolagWineByArtnr,
 } from '../controller/queries'
 
 export default (server) => {
@@ -224,67 +221,6 @@ export default (server) => {
           "data" : null
         });
       }
-    });
-
-    server.get("/api/updateAllCellar", async (req,res, next) => {
-        const query = req.query;
-        let result = [];
-        let wines = await getAllNotCellarWines();
-
-        for (var i = 0; i < wines.length; i++) {
-          let wine = await getWineById(wines[i].id);
-          let url = "";
-          if (wine.nr) {
-            let syswine = await getSystembolagWineByArtnr(wine.nr);
-            if (!syswine) {
-              syswine = await getSystembolagWineBynr(wine.nr);
-            }
-            if (syswine) {
-              let tempname = _.deburr(syswine.Namn).replace(/ /g, "-").replace('\'', '');
-              switch(wine.color) {
-                case "Rött":
-                    url = `https://www.systembolaget.se/dryck/roda-viner/${tempname}-${syswine.nr}`;
-                    break;
-                case "Vitt":
-                    url = `https://www.systembolaget.se/dryck/vita-viner/${tempname}-${syswine.nr}`;
-                    break;
-                case "Mousserande vin":
-                    url = `https://www.systembolaget.se/dryck/mousserande-viner/${tempname}-${syswine.nr}`;
-                    break;
-                case "Rosé":
-                    url = `https://www.systembolaget.se/dryck/roseviner/${tempname}-${syswine.nr}`;
-                    break;
-                default:
-                    url = '';
-              }
-            }
-          }
-          result.push({
-            "wine" : wine
-          });
-          if (url && wine.id) { 
-            fetch(url).then(function(response) {
-              if (response.ok) {
-                updateWine(url, wine.id);
-              } else {
-                console.log(response.status);
-              }
-            });
-          } else {
-            let searchstring = wine.name.replace(/ /g, "+").replace(/\./g, "").replace(/,/g, "") + "+" + wine.year + "+" + wine.country;
-            searchstring.replace("+NULL", "").replace("+null", "").replace("+undefined", "");
-            url = encodeURI(`http://www.google.com/search?q=wine+${searchstring}`);
-            updateWine(url, wine.id);
-          }
-          
-          console.log(url);
-          result[i].wine.url = url;
-        }
-        res.json({
-          "error" : false, 
-          "message" : "Success", 
-          "data" : result
-        });
     });
 
     server.get("/api/getWineByProperty", async (req, res, next) => {
