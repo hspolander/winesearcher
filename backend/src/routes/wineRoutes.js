@@ -342,7 +342,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const body = req.body;
-        const wineId = await insertWine(body.year, body.name, body.boughtFrom, body.price, body.glass, body.country, body.color, body.producerbody, 0, body.sizeml, body.systembolagetartnr);
+        const wineId = await insertWine(body.year, body.name, body.boughtFrom, body.price, body.glass, body.country, body.color, body.producerbody, 0, body.sizeml, body.nr);
         let user = await getUserByUsername(cookies.username);
         await insertReview(wineId, user.name, body.comment, body.score);
         if (body.grapes) {
@@ -393,11 +393,12 @@ export default (server) => {
           if (liItem.find('h3').text().indexOf('Råvaror') > -1) {
             allrows = liItem.find('p');
             liItem.find('div').remove();
-            allrows = liItem.html().replace(/<\/button>|samt |och |, |\d% |\d\d% |\d\d\d% |<p>/g, "");
-
+            allrows = liItem.html().replace(/<\/button>|samt|och|\.|,|\d%|\d\d%|\d\d\d%|<p>|<\/p>/g, "\r\n");
+            console.log(allrows);
             allrows = allrows.split(/\r\n|<\/button>|<button /);
             for (var i = 0; i < allrows.length; i++) {
               allrows[i] = allrows[i].trim();
+              console.log(allrows);
               if (allrows[i] && allrows[i].startsWith("class")) {
                 allrows.splice(i, 1);
                 i = i - 1;
@@ -424,6 +425,10 @@ export default (server) => {
         if (!allrows) {
           allrows = [];
         }
+        for (var i = 0; i < allrows.length; i++) {
+          allrows[i] = allrows[i].charAt(0).toUpperCase() + allrows[i].slice(1).replace('&#xE8;', 'é').replace('&#xD1;', 'Ñ').replace('&#xC9;', 'É').replace('&#xF1;', 'ñ');
+        }
+            console.log(allrows);
         res.json({"error" : false, "message" : "Allt väl", "data" : allrows});
       } else {
         res.clearCookie("WINE_UUID");
@@ -479,7 +484,7 @@ export default (server) => {
           body.producer,
           1,
           body.sizeml,
-          body.systembolagetartnr
+          body.nr
         );
         let user = await getUserByUsername(cookies.username);
         if (body.grapes) {
@@ -642,7 +647,7 @@ export default (server) => {
       const associativeArray = {};
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const query = req.query;
-        let systembolagetWines = await getSystembolagWines(query.name, query.color, query.year, query.systembolagetartnr, query.price);
+        let systembolagetWines = await getSystembolagWines(query.name, query.color, query.year, query.nr, query.price);
         systembolagetWines = _.union(systembolagetWines[0], systembolagetWines[1]);
         for (var i = 0; i < systembolagetWines.length; i++) {
           switch(systembolagetWines[i].sizeml) {
@@ -688,7 +693,7 @@ export default (server) => {
             default:
                 systembolagetWines[i].container = "Annan";
           }
-          let tempname = _.deburr(systembolagetWines[i].Namn).replace(/ /g, "-");
+          let tempname = _.deburr(systembolagetWines[i].Namn).replace(/ /g, "-").replace('\'', '');
           switch(systembolagetWines[i].color) {
             case "Rött":
                 systembolagetWines[i].url = `https://www.systembolaget.se/dryck/roda-viner/${tempname}-${systembolagetWines[i].nr}`;

@@ -251,10 +251,10 @@ export const setWineNotInCellar = (id) => {
 	query(`UPDATE wine SET incellar = 0 where id = ?`, [id])
 };
 
-export const insertWine = (year = null, name = null, boughtfrom = null, price = null, container = null, country = null, color = null, producer = null, incellar = 0, sizeml = null, systembolagetartnr = null) => 
-	query(`INSERT INTO wine(year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, systembolagetartnr) `+
+export const insertWine = (year = null, name = null, boughtfrom = null, price = null, container = null, country = null, color = null, producer = null, incellar = 0, sizeml = null, nr = null) => 
+	query(`INSERT INTO wine(year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr) `+
         `VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, systembolagetartnr])
+        [year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr])
 	.then((cursor) => {
 		return(cursor[0].insertId);
 });
