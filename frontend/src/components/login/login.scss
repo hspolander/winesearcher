@@ -14,6 +14,7 @@ $break-large: 1024px;
 .login {
 	@extend .center;
 	width: 215px;
+  min-height: 25vh;
 	padding: 20px;
 	border: 3px #54799B solid;
 	border-radius: 10px;

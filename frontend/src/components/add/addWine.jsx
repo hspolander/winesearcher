@@ -29,6 +29,7 @@ class AddWine extends React.Component {
   constructor() {
     super();
     this.sendGetSystembolagetRequest = this.sendGetSystembolagetRequest.bind(this);
+    this.sendAddWineRequest = this.sendAddWineRequest.bind(this);
   }
 
   componentDidMount() {
@@ -48,7 +49,7 @@ class AddWine extends React.Component {
       }
     }
     if (this.props.formValues) {
-      if (!prevProps.formValues || prevProps.formValues.name !== prevProps.systemWineData.name) {
+      if (!prevProps.formValues || this.props.formValues.name !== prevProps.formValues.name) {
         const domNode = ReactDOM.findDOMNode(document.getElementById('addwine-formtitle'));
         domNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -59,14 +60,6 @@ class AddWine extends React.Component {
     this.props.authUser();
     this.props.clearSysWines();
     this.props.clearInitialValues();
-  }
-
-  priceChange(e) {
-    if (e.target.value) {
-      this.setState({ price: true });
-    } else {
-      this.setState({ price: false });
-    }
   }
 
   sendAddWineRequest(values) {
@@ -107,7 +100,7 @@ class AddWine extends React.Component {
                   isSmallScreen={this.props.isSmallScreen}
                 />
                 :
-                <p>Inget resultat på din sökning</p>
+                <p id="sysbolag-result">Inget resultat på din sökning</p>
               }
             </div>
           }

@@ -147,7 +147,7 @@ const Row = (props) => {
         <div>{ wine.color.indexOf('bubbel') > -1 ? wine.color : wine.color + ' vin' }
           { wine.color === 'Rött' && <i className="fa fa-glass red" aria-hidden="true"></i> }
           { wine.color === 'Vitt' && <i className="fa fa-glass white" aria-hidden="true"></i> }
-          { wine.color === 'Vitt' && <i className="fa fa-glass rosa" aria-hidden="true"></i> }
+          { wine.color === 'Rosé' && <i className="fa fa-glass rosa" aria-hidden="true"></i> }
         </div>
       </td>
       <td>
