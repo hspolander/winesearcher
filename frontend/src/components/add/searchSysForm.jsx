@@ -51,7 +51,7 @@ const SearchSysform = props => (
     <Field type="text" label="Namn" name="name" component={renderField} placeholder="ex. Baron de ley" />
     <Field name="color" label="Färg" component={renderSelect} sublabel="" options={['', 'Rött', 'Vitt', 'Rosé', 'Mousserande vin']} />
     <Field type="text" label="År" name="year" component={renderField} validate={[maxValueCurrentYear, numeric]} placeholder="ex. 2012" />
-    <Field type="text" label="Systembolaget Artnr" normalize={addKr} name="systembolagetartnr" component={renderField} placeholder="" />
+    <Field type="text" label="Systembolaget Artnr" name="nr" component={renderField} placeholder="" />
     <Field type="text" label="Pris" normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
     <div className="button-div">
       <button type="submit" disabled={props.pristine || props.submitting}>Sök</button>

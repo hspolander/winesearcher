@@ -160,7 +160,7 @@ let AddWineForm = props => (
       onBlur={() => { props.onClearFieldFocus(); }}
       onFocus={() => { props.onFieldFocus('boughtFrom'); }}
     />
-    { props.initialValues && props.initialValues.systembolagetartnr && <Field type="text" label="Systembolagets art.nr" validate={numeric} name="systembolagetartnr" component={renderField} placeholder="ex. 123456" /> }
+    { props.initialValues && props.initialValues.nr && <Field type="text" label="Systembolagets art.nr" validate={numeric} name="nr" component={renderField} placeholder="ex. 123456" /> }
     <Field type="text" label="Pris" normalize={addKr} name="price" component={renderField} placeholder="ex. 139kr" />
     <Field name="container" label="Förpackning" component={renderSelect} options={['', 'Helflaska', 'Glas', 'Box', 'Halvflaska', 'Liten box', 'Piccolo', 'Magnum', 'Tetra', 'Stor flaska', 'Annan']} />
     { props.initialValues && props.initialValues.sizeml && <Field type="text" label="Volym" normalize={addMl} name="sizeml" component={renderField} placeholder="" /> }
