@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import Banner from './components/banner/banner';
 import AddWine from './components/add/addWine';
 import AddReview from './components/add/addReview';
-import SearchWine from './components/searchwine/searchWine';
 import WineResult from './components/wineresult/wineResult';
 import LoginOverlay from './components/login/loginOverlay';
 import ReviwResult from './components/reviewresult/reviewResult';
@@ -28,7 +27,6 @@ const Client = () => (
           <PrivateRoute path="/wines" component={WineResult} />
           <PrivateRoute path="/reviews/:table?/:property?/:value?" component={ReviwResult} />
           <Route path="/login" component={Login} />
-          <PrivateRoute path="/search" component={SearchWine} />
           <PrivateRoute path="/" component={AddWine} />
         </Switch>
       </div>
