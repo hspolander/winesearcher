@@ -87,6 +87,28 @@ export const getSystembolagWines = (name = '%%', color = '%%', year = '%%', artn
 	return Promise.all(autocompleteQueries)
 }
 
+export const getSystembolagWineBynr = (nr) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
+	` nr like ` + nr + `; `
+	)
+	.then((cursor) => {
+		if (cursor[0][0]) {
+			return cursor[0][0];
+		} else {
+			return null;
+		}
+});
+
+export const getSystembolagWineByArtnr = (systembolagetartnr) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
+	` systembolagetartnr like ` + systembolagetartnr + `; `
+	)
+	.then((cursor) => {
+		if (cursor[0][0]) {
+			return cursor[0][0];
+		} else {
+			return null;
+		}
+});
+
 const getSystembolagWinesQuery = (colNamne, name, color, year, artnr, price) => query(`SELECT Namn, Namn2, color, country, year, nr, producer, price, Alkoholhalt, sizeml FROM systembolaget_sortiment WHERE ` +
 	 colNamne + ` like '` + name + `' AND  ` +
 	`color like '` + color + `' AND  ` +
@@ -229,10 +251,10 @@ export const setWineNotInCellar = (id) => {
 	query(`UPDATE wine SET incellar = 0 where id = ?`, [id])
 };
 
-export const insertWine = (year = null, name = null, boughtfrom = null, price = null, container = null, country = null, color = null, producer = null, incellar = 0, sizeml = null, nr = null) => 
-	query(`INSERT INTO wine(year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr) `+
-        `VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr])
+export const insertWine = (year = null, name = null, boughtfrom = null, price = null, container = null, country = null, color = null, producer = null, incellar = 0, sizeml = null, nr = null, url = null) => 
+	query(`INSERT INTO wine(year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr, url) `+
+        `VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [year, name, boughtfrom, price, container, country, color, producer, incellar, sizeml, nr, url])
 	.then((cursor) => {
 		return(cursor[0].insertId);
 });

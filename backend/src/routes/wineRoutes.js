@@ -15,6 +15,8 @@ import {
   getUserByUsername,
   getWineByProperty,
   getWineByForeignProperty,
+  getSystembolagWineBynr,
+  getSystembolagWineByArtnr,
   getHashByUsername,
   getAllNotCellarWines,
   getAllCellarWines,
@@ -278,7 +280,10 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const body = req.body;
-        const wineId = await insertWine(body.year, body.name, body.boughtFrom, body.price, body.glass, body.country, body.color, body.producerbody, 0, body.sizeml, body.nr);
+        console.log(body);
+        const wineUrl = await getWineUrl(body.nr, body.name, body.year, body.country);
+        console.log(wineUrl);
+        const wineId = await insertWine(body.year, body.name, body.boughtFrom, body.price, body.glass, body.country, body.color, body.producerbody, 0, body.sizeml, body.nr, wineUrl);
         let user = await getUserByUsername(cookies.username);
         await insertReview(wineId, user.name, body.comment, body.score);
         if (body.grapes) {
@@ -409,6 +414,7 @@ export default (server) => {
       const cookies = req.cookies;
       if (cookies && cookies.WINE_UUID && await validateSession(cookies.WINE_UUID)) {
         const body = req.body;
+        const wineUrl = await getWineUrl(body.nr, body.name, body.year, body.country);
         const wineId = await insertWine(
           body.year,
           body.name,
@@ -420,7 +426,8 @@ export default (server) => {
           body.producer,
           1,
           body.sizeml,
-          body.nr
+          body.nr,
+          wineUrl
         );
         let user = await getUserByUsername(cookies.username);
         if (body.grapes) {
@@ -537,6 +544,40 @@ export default (server) => {
       } else {
         insertUuid(user.id, uuid, uuid_ttl, uuid_ttl_max);
       }
+    }
+
+    const getWineUrl = async (nr, name, year, country) => {
+      let url = '';
+      if (nr) {
+        let syswine = await getSystembolagWineByArtnr(nr);
+        if (!syswine) {
+          syswine = await getSystembolagWineBynr(nr);
+        }
+        if (syswine) {
+          let tempname = _.deburr(syswine.Namn).replace(/ /g, "-").replace('\'', '');
+          switch(syswine.color) {
+            case "Rött":
+              url = `https://www.systembolaget.se/dryck/roda-viner/${tempname}-${syswine.nr}`;
+              break;
+            case "Vitt":
+              url = `https://www.systembolaget.se/dryck/vita-viner/${tempname}-${syswine.nr}`;
+              break;
+            case "Mousserande vin":
+              url = `https://www.systembolaget.se/dryck/mousserande-viner/${tempname}-${syswine.nr}`;
+              break;
+            case "Rosé":
+              url = `https://www.systembolaget.se/dryck/roseviner/${tempname}-${syswine.nr}`;
+              break;
+            default:
+              url = '';
+              }
+            }
+      } else {
+        let searchstring = name.replace(/ /g, "+").replace(/\./g, "").replace(/,/g, "") + "+" + year + "+" + country;
+        searchstring.replace("+NULL", "").replace("+null", "").replace("+undefined", "");
+        url = encodeURI(`http://www.google.com/search?q=wine+${searchstring}`);
+      }
+      return url;
     }
 
     const validateLoginObject = (login) => {
