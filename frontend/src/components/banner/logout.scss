@@ -1,12 +1,24 @@
 @import "../../../css/util";
 @import "../../../css/color";
 
+$break-large: 1024px;
+@mixin respond-to($media) {
+  @if $media == small-screens {
+    @media only screen and (max-width: $break-large) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
 .banner-logout {
+    @include respond-to(small-screens) { width: 5% ;}
     width: 3%;
     .icons-menu {
         @extend .center-vertically;
         color: $darkgray;
         text-align: center;
+        margin-right:10px;
         i {
             display: block;
             &.fa {

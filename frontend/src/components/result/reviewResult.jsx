@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import PropTypes from 'prop-types';
 
-import { loadClickedItem, loadOrderedClickedItem, toggleDetailedView } from './actions';
+import SortWines from './sortWines';
+import { SearchResult, SearchResultDetailed } from './result';
+import { loadClickedReview, loadOrderedClickedReview, toggleDetailedView } from './actions';
 import { setInitialValuesResult } from '../add/actions';
 import { authUser } from '../login/actions';
 import setScreenSize from '../global/actions';
@@ -18,10 +20,10 @@ class WineResult extends React.Component {
     this.loadValuesAddWine = this.loadValuesAddWine.bind(this);
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     this.props.authUser();
     const params = this.props.match.params;
-    this.props.loadClickedItem({ 'property': params.property, 'value': params.value, 'table': params.table });
+    this.props.loadClickedReview({ 'property': params.property, 'value': params.value, 'table': params.table });
     if (window.innerWidth <= 1024) {
       this.props.setScreenSize(true);
     } else {
@@ -32,21 +34,21 @@ class WineResult extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location !== this.props.location) {
       const params = nextProps.match.params;
-      this.props.loadClickedItem({ 'property': params.property, 'value': params.value, 'table': params.table });
+      this.props.loadClickedReview({ 'property': params.property, 'value': params.value, 'table': params.table });
     }
   }
 
   sortWines(e) {
     if (e.target.value) {
       const params = this.props.match.params;
-      this.props.loadOrderedClickedItem({ 'property': params.property, 'value': params.value, 'table': params.table, 'orderedProp': e.target.value });
+      this.props.loadOrderedClickedReview({ 'property': params.property, 'value': params.value, 'table': params.table, 'orderedProp': e.target.value });
     }
   }
 
   loadValuesReview(values) {
     const initialValues = { ...values };
-    let grapes = [];
-    for (var i = 0; i < values.grapes.length; i++) {
+    const grapes = [];
+    for (let i = 0; i < values.grapes.length; i += 1) {
       grapes.push(values.grapes[i].grape);
     }
     initialValues.grapes = grapes;
@@ -58,8 +60,8 @@ class WineResult extends React.Component {
 
   loadValuesAddWine(values) {
     const initialValues = { ...values };
-    let grapes = [];
-    for (var i = 0; i < values.grapes.length; i++) {
+    const grapes = [];
+    for (let i = 0; i < values.grapes.length; i += 1) {
       grapes.push(values.grapes[i].grape);
     }
     initialValues.grapes = grapes;
@@ -72,22 +74,11 @@ class WineResult extends React.Component {
   render() {
     return (
       <div className="content">
-        <div className="input-div search">
-          <span>Sortera på:</span>
-          <select onChange={this.sortWines}>
-            <option value=""></option>
-            <option value="color">Färg</option>
-            <option value="country">Land</option>
-            <option value="name">Namn</option>
-            <option value="price">Pris</option>
-            <option value="year">År</option>
-            <option value="score">Betyg</option>
-          </select>
-        </div>
+        <SortWines sortWines={this.sortWines} />
         { !this.props.isSmallScreen &&
-          <button onClick={ () => { this.props.toggleDetailedView(); }} className={this.props.detailedView ? 'activeButton' : 'notActiveButton'}>Detaljerad vy</button>
+          <button onClick={() => { this.props.toggleDetailedView(); }} className={this.props.detailedView ? 'activeButton' : 'notActiveButton'}>Detaljerad vy</button>
         }
-        { this.props.fetched &&  this.props.reviews && this.props.reviews.data &&
+        { this.props.fetched && this.props.reviews && this.props.reviews.data &&
           <div>
             {this.props.detailedView || this.props.isSmallScreen ?
               <SearchResultDetailed
@@ -105,18 +96,40 @@ class WineResult extends React.Component {
             }
           </div>
         }
-        { this.props.fetching &&  <Loader /> }
+        { this.props.fetching && <Loader /> }
         { this.props.reviews && this.props.reviews.data && this.props.reviews.data.length === 0 && <Noresult /> }
       </div>
     );
   }
 }
+WineResult.propTypes = {
+  fetched: PropTypes.bool,
+  fetching: PropTypes.bool,
+  detailedView: PropTypes.bool,
+  isSmallScreen: PropTypes.bool,
+  reviews: PropTypes.object,
+  match: PropTypes.object,
+  location: PropTypes.object,
+  history: PropTypes.object.isRequired,
+  setScreenSize: PropTypes.func.isRequired,
+  toggleDetailedView: PropTypes.func.isRequired,
+  setInitialValuesResult: PropTypes.func.isRequired,
+  loadClickedReview: PropTypes.func.isRequired,
+  authUser: PropTypes.func.isRequired,
+  loadOrderedClickedReview: PropTypes.func.isRequired,
+};
 
 
-const SearchResult = (props) => {
+/*const SearchResult = (props) => {
   const wines = props.wine.data;
-  const rows = wines.map((wine) =>
-    <Row key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} removeFromCellar={props.removeFromCellar} loadValuesReview={props.loadValuesReview} />);
+  const rows = wines.map(wine =>
+    <Row
+      key={`wine${wine.wine.id}`}
+      wine={wine}
+      loadValuesAddWine={props.loadValuesAddWine}
+      removeFromCellar={props.removeFromCellar}
+      loadValuesReview={props.loadValuesReview}
+    />);
   return (
     <div className="search-result-reviews">
       { props.wine && <div className="wine-result">
@@ -143,12 +156,16 @@ const SearchResult = (props) => {
     </div>
   );
 };
+SearchResult.propTypes = {
+  wine: PropTypes.object,
+  loadValuesReview: PropTypes.func.isRequired,
+};
 
 
 const Row = (props) => {
   const wine = props.wine.wine;
   const grapes = wine.grapes;
-  const graperows = grapes.map((grape) =>
+  const graperows = grapes.map(grape =>
     <div key={`grape${grape.id}`} className="grape">{grape.grape}</div>);
   return (
     <tr className="single-wine-result">
@@ -159,10 +176,10 @@ const Row = (props) => {
         <div>{wine.country}</div>
       </td>
       <td>
-        <div>{ wine.color.indexOf('bubbel') > -1 ? wine.color : wine.color + ' vin' }
-          { wine.color === 'Rött' && <i className="fa fa-glass red" aria-hidden="true"></i> }
-          { wine.color === 'Rosé' && <i className="fa fa-glass rosa" aria-hidden="true"></i> }
-          { wine.color === 'Vitt' && <i className="fa fa-glass white" aria-hidden="true"></i> }
+        <div>{ wine.color.indexOf('bubbel') > -1 ? wine.color : `${wine.color} vin` }
+          { wine.color === 'Rött' && <i className="fa fa-glass red" aria-hidden="true" /> }
+          { wine.color === 'Rosé' && <i className="fa fa-glass rosa" aria-hidden="true" /> }
+          { wine.color === 'Vitt' && <i className="fa fa-glass white" aria-hidden="true" /> }
         </div>
       </td>
       <td>
@@ -189,6 +206,11 @@ const Row = (props) => {
     </tr>
   );
 };
+Row.propTypes = {
+  wine: PropTypes.object,
+  loadValuesReview: PropTypes.func.isRequired,
+  loadValuesAddWine: PropTypes.func.isRequired,
+};
 
 
 const SearchResultDetailed = (props) => {
@@ -196,11 +218,11 @@ const SearchResultDetailed = (props) => {
   let rows;
 
   if (props.isSmallScreen) {
-    rows = wines.map((wine) =>
-     <RowMobile key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
+    rows = wines.map(wine =>
+      <RowMobile key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
   } else {
-    rows = wines.map((wine) =>
-     <RowDetailed key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
+    rows = wines.map(wine =>
+      <RowDetailed key={`wine${wine.wine.id}`} wine={wine} loadValuesAddWine={props.loadValuesAddWine} loadValuesReview={props.loadValuesReview} />);
   }
 
   return (
@@ -213,28 +235,33 @@ const SearchResultDetailed = (props) => {
     </div>
   );
 };
+SearchResultDetailed.propTypes = {
+  wine: PropTypes.object,
+  isSmallScreen: PropTypes.bool.isRequired,
+  loadValuesReview: PropTypes.func.isRequired,
+};
 
 const RowDetailed = (props) => {
   const wine = props.wine.wine;
   const grapes = wine.grapes;
   const reviews = wine.reviews;
 
-  const graperows = grapes.map((grape) =>
+  const graperows = grapes.map(grape =>
     <div key={`grape${grape.id}`} className="grape">{grape.grape}</div>);
-  const reviewrows = reviews.map((review) =>
+  const reviewrows = reviews.map(review =>
     <div key={`review${review.id}`} className="review">
       <div className="result-header">Recension:</div>
       <div className="comment">{review.comment}</div>
     </div>);
   return (
     <div className="single-review-result-detailed">
-    { reviews[0] && reviews[0].added &&
-      <div className="header">
-        <div className="reviewer">{reviews[0].reviewer}</div>
-        <div className="date-time">{moment(reviews[0].added).format('YYYY-MM-DD HH:mm')}</div>
-        <div className="score">{reviews[0].score} av 10</div>
-      </div>
-    }
+      { reviews[0] && reviews[0].added &&
+        <div className="header">
+          <div className="reviewer">{reviews[0].reviewer}</div>
+          <div className="date-time">{moment(reviews[0].added).format('YYYY-MM-DD HH:mm')}</div>
+          <div className="score">{reviews[0].score} av 10</div>
+        </div>
+      }
       <table className="single-review-table-detailed">
         <tbody>
           <tr>
@@ -302,6 +329,11 @@ const RowDetailed = (props) => {
       </table>
     </div>
   );
+};
+RowDetailed.propTypes = {
+  wine: PropTypes.object,
+  loadValuesReview: PropTypes.func.isRequired,
+  loadValuesAddWine: PropTypes.func.isRequired,
 };
 
 const RowMobile = (props) => {
@@ -309,29 +341,25 @@ const RowMobile = (props) => {
   const grapes = wine.grapes;
   const reviews = wine.reviews;
 
-  const graperows = grapes.map((grape) =>
+  const graperows = grapes.map(grape =>
     <div key={`grape${grape.id}`} className="grape">{grape.grape}</div>);
-  const reviewrows = reviews.map((review) =>
+  const reviewrows = reviews.map(review =>
     <div key={`review${review.id}`} className="review">
       <div className="result-header">Recension:</div>
       <div className="comment">{review.comment}</div>
     </div>);
   return (
     <div className="single-review-result-detailed">
-    { reviews[0] && reviews[0].added &&
-      <div className="header">
-        <div className="reviewer">{reviews[0].reviewer}</div>
-        <div className="date-time">{moment(reviews[0].added).format('YYYY-MM-DD HH:mm')}</div>
-        <div className="score">{reviews[0].score} av 10</div>
-      </div>
-    }
+      { reviews[0] && reviews[0].added &&
+        <div className="header">
+          <div className="wine-name">{wine.name}</div>
+          <div className="date-time">{moment(reviews[0].added).format('YYYY-MM-DD HH:mm')}</div>
+          <div className="score">{reviews[0].score} av 10</div>
+        </div>
+      }
       <table className="single-review-table-detailed">
         <tbody>
           <tr>
-            <td>
-              <div className="result-header">Namn:</div>
-              <div>{wine.name}</div>
-            </td>
             <td>
               <div className="result-header">Land:</div>
               <div>{wine.country}</div>
@@ -350,13 +378,13 @@ const RowMobile = (props) => {
             </td>
           </tr>
           {graperows && <tr>
-            <td colSpan="5">
+            <td colSpan="3">
               <div className="result-header">Druvor:</div>
               <div className="graperows">{graperows}</div>
             </td>
           </tr>}
           {reviewrows && <tr>
-            <td colSpan="5">
+            <td colSpan="3">
               <div className="reviewrows">{reviewrows}</div>
             </td>
           </tr>}
@@ -367,7 +395,7 @@ const RowMobile = (props) => {
                 <div>{wine.boughtfrom}</div>
               </div>}
             </td>
-            <td colSpan="3">
+            <td colSpan="2">
               {wine.price && <div>
                 <div className="result-header">Pris: </div>
                 <div>{wine.price} per </div>
@@ -376,7 +404,7 @@ const RowMobile = (props) => {
             </td>
           </tr>
           {<tr>
-            <td colSpan="3" />
+            <td />
             <td>
               <div className="add-new-button" onClick={() => props.loadValuesReview(wine)}>
                 <i className="fa fa-commenting-o" aria-hidden="true" /> Recensera
@@ -393,6 +421,12 @@ const RowMobile = (props) => {
     </div>
   );
 };
+RowMobile.propTypes = {
+  wine: PropTypes.object,
+  loadValuesReview: PropTypes.func.isRequired,
+  loadValuesAddWine: PropTypes.func.isRequired,
+};
+*/
 
 const Loader = () => (
   <div className="loader">
@@ -418,12 +452,12 @@ const mapStateToProps = state =>
     fetching: state.reviewResultReducer.fetching,
     detailedView: state.reviewResultReducer.detailedView,
     fetched: state.reviewResultReducer.fetched,
-    isSmallScreen: state.globalReducer.isSmallScreen,
+    isSmallScreen: true,
   });
 
 const mapDispatchToProps = {
-  loadClickedItem,
-  loadOrderedClickedItem,
+  loadClickedReview,
+  loadOrderedClickedReview,
   setInitialValuesResult,
   toggleDetailedView,
   setScreenSize,

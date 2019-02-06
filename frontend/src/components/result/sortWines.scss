@@ -1,0 +1,22 @@
+$break-large: 1024px;
+@mixin respond-to($media) {
+  @if $media == small-screens {
+    @media only screen and (max-width: $break-large) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
+.input-div.search {
+	@include respond-to(small-screens) { 
+		font-size: 27px;
+		width: 700px !important;
+	}
+	select {	
+		@include respond-to(small-screens) { 
+			height: 30px !important;
+			width: 300px !important;
+		}
+	}
+}
