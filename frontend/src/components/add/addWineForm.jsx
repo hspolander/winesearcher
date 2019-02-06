@@ -68,7 +68,7 @@ renderSelect.propTypes = {
   meta: PropTypes.object,
 };
 
-let renderGrapes = ({ autocompleteData, focusedField, fields, loadFieldAutocomplete, onClearFieldFocus, onFieldFocus }) => (
+const renderGrapes = ({ autocompleteData, focusedField, fields }) => (
   <div className="grape-div">
     <div className="input-div">
       <div className="input-div">
@@ -102,9 +102,6 @@ renderGrapes.propTypes = {
   fields: PropTypes.object.isRequired,
   autocompleteData: PropTypes.object,
   focusedField: PropTypes.string,
-  loadFieldAutocomplete: PropTypes.func,
-  onClearFieldFocus: PropTypes.func,
-  onFieldFocus: PropTypes.func,
 };
 
 let AddWineForm = props => (
@@ -174,6 +171,11 @@ let AddWineForm = props => (
 AddWineForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
+  initialValues: PropTypes.object,
+  resetForm: PropTypes.func.isRequired,
+  loadFieldAutocomplete: PropTypes.func.isRequired,
+  onClearFieldFocus: PropTypes.func.isRequired,
+  onFieldFocus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state =>

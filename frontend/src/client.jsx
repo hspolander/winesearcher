@@ -6,9 +6,9 @@ import Cookies from 'js-cookie';
 import Banner from './components/banner/banner';
 import AddWine from './components/add/addWine';
 import AddReview from './components/add/addReview';
-import WineResult from './components/wineresult/wineResult';
+import WineResult from './components/result/wineResult';
+import ReviwResult from './components/result/reviewResult';
 import LoginOverlay from './components/login/loginOverlay';
-import ReviwResult from './components/reviewresult/reviewResult';
 import Login from './components/login/login';
 
 import PrivateRoute from './components/global/privateRoute';

@@ -1,7 +1,9 @@
-export const errorHandlerMiddleware = store => next => (action) => {
+const errorHandlerMiddleware = () => next => (action) => {
   try {
     next(action);
-  } catch(e) {
+  } catch (e) {
     console.log('error occured.', e);
   }
 };
+
+export default errorHandlerMiddleware;

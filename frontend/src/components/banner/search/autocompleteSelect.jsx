@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Responseheader from './responseheader';
@@ -19,14 +19,14 @@ class AutocompleteSelect extends React.Component {
     document.addEventListener('mousedown', this.handleClickOutside);
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
   componentWillReceiveProps() {
     if (this.props && this.props.navigated) {
       this.setState({ collapsed: true });
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   handleClickOutside(event) {
@@ -56,6 +56,11 @@ class AutocompleteSelect extends React.Component {
     );
   }
 }
+
+AutocompleteSelect.propTypes = {
+  navigated: PropTypes.bool,
+  autocompleteSelect: PropTypes.object,
+};
 
 const mapStateToProps = state =>
   ({

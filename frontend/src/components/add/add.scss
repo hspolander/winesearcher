@@ -96,7 +96,7 @@ $break-large: 1024px;
       }
   	}
   	input[type=range] {
-  		width: 70vw;
+  		max-width: 70vw;
   	}
   	input[type=text], input[type=password], select {
       width: 200px;

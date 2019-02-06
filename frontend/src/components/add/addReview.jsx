@@ -37,7 +37,7 @@ class AddReview extends React.Component {
   componentDidMount() {
     this.props.authUser();
     if (this.props.navigatedInitialValues) {
-      this.props.setInitialValues(navigatedInitialValues);
+      this.props.setInitialValues(this.props.navigatedInitialValues);
     } else {
       resetForm('WineReview');
     }
@@ -124,6 +124,9 @@ AddReview.propTypes = {
   clearInitialValues: PropTypes.func.isRequired,
   setInitialValues: PropTypes.func.isRequired,
   sendLoadSystembolagetReviewRow: PropTypes.func.isRequired,
+  navigatedInitialValues: PropTypes.object,
+  isSmallScreen: PropTypes.bool.isRequired,
+  formValues: PropTypes.object,
   sendLoadSystembolagetImage: PropTypes.func.isRequired,
   systemWineData: PropTypes.array,
   setScreenSize: PropTypes.func.isRequired,

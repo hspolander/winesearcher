@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import { AppContainer } from 'react-hot-loader';
-import { errorHandlerMiddleware } from './errorHandlerMiddleware';
-import { authMiddleware } from './authMiddleware';
+import errorHandlerMiddleware from './errorHandlerMiddleware';
+import authMiddleware from './authMiddleware';
 
 import '../css/global.scss';
 import '../css/_util_global.scss';

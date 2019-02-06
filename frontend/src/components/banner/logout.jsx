@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { killSession } from '../login/actions';
 
@@ -19,6 +20,10 @@ const Logout = props => (
 
 const mapDispatchToProps = {
   killSession,
+};
+
+Logout.propTypes = {
+  killSession: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Logout);

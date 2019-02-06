@@ -7,15 +7,18 @@ import PropTypes from 'prop-types';
 import { authUser } from '../login/actions';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={
+  <Route
+    {...rest}
+    render={
     props => (
     Cookies.get('WINE_UUID') ? (
       <Component {...props} />
     ) : (
-      <Redirect to={{
-        pathname: '/login',
-        state: { from: props.location },
-      }}
+      <Redirect
+        to={{
+          pathname: '/login',
+          state: { from: props.location },
+        }}
       />
     )
   )}

@@ -32,9 +32,9 @@ export const killSession = () => (dispatch) => {
   });
 };
 
-export const setUserUnauthorized = () => dispatch => {
-  dispatch({ type: SET_USER_UNAUTHORIZED });
-};
+export const setUserUnauthorized = () => dispatch => (
+  dispatch({ type: SET_USER_UNAUTHORIZED })
+);
 
 const sendLoginRequest = (values, dispatch) => {
   axios.post('/api/login', values)

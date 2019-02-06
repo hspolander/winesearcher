@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import AutocompleteSelect from './autocompleteSelect';
 import loadAutocompleteSearch from './actions';
@@ -37,6 +37,12 @@ class Search extends React.Component {
     );
   }
 }
+Search.propTypes = {
+  match: PropTypes.bool,
+  data: PropTypes.object,
+  loadAutocompleteSearch: PropTypes.func,
+  fetched: PropTypes.bool,
+};
 
 const mapStateToProps = state =>
   ({
@@ -59,5 +65,10 @@ const MenuIcon = props => (
     </div>
   </Link>
 );
+MenuIcon.propTypes = {
+  icon: PropTypes.string,
+  text: PropTypes.string,
+  navTo: PropTypes.string,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -1,36 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SearchSysResult = (props) => {
+const SearchSysResult = ({ sendLoadSystembolagetRow, sendLoadSystembolagetImage, showImageOfWine, hideImageOfWine, isSmallScreen, systemWineData }) => {
   let tbody;
-  if (props.isSmallScreen) {
-    tbody = props.systemWineData.map((wine, index) =>
+  if (isSmallScreen) {
+    tbody = systemWineData.map((wine, index) =>
       <SmallScreenRow
         key={index}
         wine={wine}
         rowId={index}
-        sendLoadSystembolagetRow={props.sendLoadSystembolagetRow}
-        sendLoadSystembolagetImage={props.sendLoadSystembolagetImage}
-        showImageOfWine={props.showImageOfWine}
-        hideImageOfWine={props.hideImageOfWine}
-        isSmallScreen={props.isSmallScreen}
+        sendLoadSystembolagetRow={sendLoadSystembolagetRow}
+        sendLoadSystembolagetImage={sendLoadSystembolagetImage}
+        showImageOfWine={showImageOfWine}
+        hideImageOfWine={hideImageOfWine}
+        isSmallScreen={isSmallScreen}
       />);
   } else {
-    tbody = props.systemWineData.map((wine, index) =>
+    tbody = systemWineData.map((wine, index) =>
       <Row
         key={index}
         wine={wine}
         rowId={index}
-        sendLoadSystembolagetRow={props.sendLoadSystembolagetRow}
-        sendLoadSystembolagetImage={props.sendLoadSystembolagetImage}
-        showImageOfWine={props.showImageOfWine}
-        hideImageOfWine={props.hideImageOfWine}
+        sendLoadSystembolagetRow={sendLoadSystembolagetRow}
+        sendLoadSystembolagetImage={sendLoadSystembolagetImage}
+        showImageOfWine={showImageOfWine}
+        hideImageOfWine={hideImageOfWine}
       />);
   }
   return (
     <div id="sysbolag-result" className="sysWineRows">
       <table className="single-systembolag-table">
-        {props.isSmallScreen ?
+        {isSmallScreen ?
           <thead />
           :
           <thead>
@@ -82,20 +82,20 @@ SearchSysResult.propTypes = {
   systemWineData: PropTypes.array,
 };
 
-const Row = props => (
+const Row = ({ wine, showImageOfWine, hideImageOfWine, sendLoadSystembolagetRow, rowId }) => (
   <tbody>
     <tr>
       <td>
-        <div className="sys-wine-td">{props.wine.name}</div>
+        <div className="sys-wine-td">{wine.name}</div>
       </td>
       <td>
         <div className="sys-wine-td">
           {
-            props.wine.image !== null ? <i
+            wine.image !== null ? <i
               className="fa fa-image fa-lg"
               aria-hidden="true"
-              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
-              onMouseLeave={() => props.hideImageOfWine(props.rowId)}
+              onMouseEnter={() => showImageOfWine(wine, rowId)}
+              onMouseLeave={() => hideImageOfWine(rowId)}
             /> :
             <i
               className="fa fa-image fa-lg disabled"
@@ -103,39 +103,39 @@ const Row = props => (
             />
           }
           {
-            props.wine.image && props.wine.imageVisible &&
+            wine.image && wine.imageVisible &&
             <div>
-              <img alt="Bild på vin" className="sysWineImage" src={props.wine.image} />
+              <img alt="Bild på vin" className="sysWineImage" src={wine.image} />
             </div>
           }
         </div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.year}</div>
+        <div className="sys-wine-td">{wine.year}</div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.country}</div>
+        <div className="sys-wine-td">{wine.country}</div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.color}</div>
+        <div className="sys-wine-td">{wine.color}</div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.container}</div>
+        <div className="sys-wine-td">{wine.container}</div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.producer}</div>
+        <div className="sys-wine-td">{wine.producer}</div>
       </td>
       <td>
-        <div className="sys-wine-td">{props.wine.price}</div>
+        <div className="sys-wine-td">{wine.price}</div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-plus-square-o  fa-lg" aria-hidden="true" onClick={() => props.sendLoadSystembolagetRow(props.wine)} />
+          <i className="fa fa-plus-square-o  fa-lg" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
         </div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(props.wine.url, '_blank')} />
+          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, '_blank')} />
         </div>
       </td>
     </tr>
@@ -149,17 +149,17 @@ Row.propTypes = {
   wine: PropTypes.object.isRequired,
 };
 
-const SmallScreenRow = props => (
+const SmallScreenRow = ({ wine, showImageOfWine, hideImageOfWine, sendLoadSystembolagetRow, rowId }) => (
   <tbody>
     <tr>
       <td rowSpan="2">
         <div className="sys-wine-td">
           {
-            props.wine.image !== null ? <i
+            wine.image !== null ? <i
               className="fa fa-image fa-lg"
               aria-hidden="true"
-              onMouseEnter={() => props.showImageOfWine(props.wine, props.rowId)}
-              onMouseLeave={() => props.hideImageOfWine(props.rowId)}
+              onMouseEnter={() => showImageOfWine(wine, rowId)}
+              onMouseLeave={() => hideImageOfWine(rowId)}
             /> :
             <i
               className="fa fa-image fa-lg disabled"
@@ -167,47 +167,47 @@ const SmallScreenRow = props => (
             />
           }
           {
-            props.wine.image && props.wine.imageVisible &&
+            wine.image && wine.imageVisible &&
             <div>
-              <img alt="Bild på vin" className="sysWineImage" src={props.wine.image} />
+              <img alt="Bild på vin" className="sysWineImage" src={wine.image} />
             </div>
           }
         </div>
       </td>
       <td>
         <div className="sys-wine-td title">Namn</div>
-        <div className="sys-wine-td">{props.wine.name}</div>
+        <div className="sys-wine-td">{wine.name}</div>
       </td>
       <td>
         <div className="sys-wine-td title">År</div>
-        <div className="sys-wine-td">{props.wine.year}</div>
+        <div className="sys-wine-td">{wine.year}</div>
       </td>
       <td>
         <div className="sys-wine-td title">Färg</div>
-        <div className="sys-wine-td">{props.wine.color}</div>
+        <div className="sys-wine-td">{wine.color}</div>
       </td>
       <td>
         <div className="sys-wine-td title">Producent</div>
-        <div className="sys-wine-td">{props.wine.producer}</div>
+        <div className="sys-wine-td">{wine.producer}</div>
       </td>
     </tr>
     <tr>
       <td>
         <div className="sys-wine-td title">Förpackning</div>
-        <div className="sys-wine-td">{props.wine.container}</div>
+        <div className="sys-wine-td">{wine.container}</div>
       </td>
       <td>
         <div className="sys-wine-td title">Pris</div>
-        <div className="sys-wine-td">{props.wine.producer}</div>
+        <div className="sys-wine-td">{wine.producer}</div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-plus-square-o  fa-lg" aria-hidden="true" onClick={() => props.sendLoadSystembolagetRow(props.wine)} />
+          <i className="fa fa-plus-square-o  fa-lg" aria-hidden="true" onClick={() => sendLoadSystembolagetRow(wine)} />
         </div>
       </td>
       <td>
         <div className="sys-wine-td">
-          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(props.wine.url, '_blank')} />
+          <i className="fa fa-link fa-lg" aria-hidden="true" onClick={() => window.open(wine.url, '_blank')} />
         </div>
       </td>
     </tr>
