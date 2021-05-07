@@ -16,7 +16,7 @@
     "bcrypt": "1.0.2",
     "body-parser": "^1.12.4",
     "cheerio": "^0.22.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "moment": "^2.19.3",
     "mysql2": "^1.5.1",
     "node-fetch": "^2.2.0",
